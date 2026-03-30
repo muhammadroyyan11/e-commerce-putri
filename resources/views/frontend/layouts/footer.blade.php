@@ -1,156 +1,96 @@
+{{-- ===== ORGANIK FOOTER ===== --}}
+@php
+    $settings_footer = DB::table('settings')->first();
+@endphp
 
-	<!-- Start Footer Area -->
-	<footer class="footer">
-		<!-- Footer Top -->
-		<div class="footer-top section">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-5 col-md-6 col-12">
-						<!-- Single Widget -->
-						<div class="single-footer about">
-							<div class="logo">
-								<a href="index.html"><img src="{{asset('backend/img/logo2.png')}}" alt="#"></a>
-							</div>
-							@php
-								$settings=DB::table('settings')->get();
-							@endphp
-							<p class="text">@foreach($settings as $data) {{$data->short_des}} @endforeach</p>
-							<p class="call">Got Question? Call us 24/7<span><a href="tel:123456789">@foreach($settings as $data) {{$data->phone}} @endforeach</a></span></p>
-						</div>
-						<!-- End Single Widget -->
-					</div>
-					<div class="col-lg-2 col-md-6 col-12">
-						<!-- Single Widget -->
-						<div class="single-footer links">
-							<h4>Information</h4>
-							<ul>
-								<li><a href="{{route('about-us')}}">About Us</a></li>
-								<li><a href="#">Faq</a></li>
-								<li><a href="#">Terms & Conditions</a></li>
-								<li><a href="{{route('contact')}}">Contact Us</a></li>
-								<li><a href="#">Help</a></li>
-							</ul>
-						</div>
-						<!-- End Single Widget -->
-					</div>
-					<div class="col-lg-2 col-md-6 col-12">
-						<!-- Single Widget -->
-						<div class="single-footer links">
-							<h4>Customer Service</h4>
-							<ul>
-								<li><a href="#">Payment Methods</a></li>
-								<li><a href="#">Money-back</a></li>
-								<li><a href="#">Returns</a></li>
-								<li><a href="#">Shipping</a></li>
-								<li><a href="#">Privacy Policy</a></li>
-								<a href="https://nepvox.com" target="_blank" style="display:none;">Nepvox AI</a>
+<footer class="organik-footer">
+    <div class="container">
+        <div class="row g-4 pb-4">
 
-							</ul>
-						</div>
-						<!-- End Single Widget -->
-					</div>
-					<div class="col-lg-3 col-md-6 col-12">
-						<!-- Single Widget -->
-						<div class="single-footer social">
-							<h4>Get In Tuch</h4>
-							<!-- Single Widget -->
-							<div class="contact">
-								<ul>
-									<li>@foreach($settings as $data) {{$data->address}} @endforeach</li>
-									<li>@foreach($settings as $data) {{$data->email}} @endforeach</li>
-									<li>@foreach($settings as $data) {{$data->phone}} @endforeach</li>
-								</ul>
-							</div>
-							<!-- End Single Widget -->
-							<div class="sharethis-inline-follow-buttons"></div>
-						</div>
-						<!-- End Single Widget -->
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- End Footer Top -->
-		<div class="copyright">
-			<div class="container">
-				<div class="inner">
-					<div class="row">
-						<div class="col-lg-6 col-12">
-							<div class="left">
-								<p>Copyright © {{date('Y')}} <a href="https://github.com/Prajwal100" target="_blank">Prajwal Rai</a>  -  All Rights Reserved.</p>
-							</div>
-						</div>
-						<div class="col-lg-6 col-12">
-							<div class="right">
-								<img src="{{asset('backend/img/payments.png')}}" alt="#">
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</footer>
-	<!-- /End Footer Area -->
- 
-	<!-- Jquery -->
-    <script src="{{asset('frontend/js/jquery.min.js')}}"></script>
-    <script src="{{asset('frontend/js/jquery-migrate-3.0.0.js')}}"></script>
-	<script src="{{asset('frontend/js/jquery-ui.min.js')}}"></script>
-	<!-- Popper JS -->
-	<script src="{{asset('frontend/js/popper.min.js')}}"></script>
-	<!-- Bootstrap JS -->
-	<script src="{{asset('frontend/js/bootstrap.min.js')}}"></script>
-	<!-- Color JS -->
-	<script src="{{asset('frontend/js/colors.js')}}"></script>
-	<!-- Slicknav JS -->
-	<script src="{{asset('frontend/js/slicknav.min.js')}}"></script>
-	<!-- Owl Carousel JS -->
-	<script src="{{asset('frontend/js/owl-carousel.js')}}"></script>
-	<!-- Magnific Popup JS -->
-	<script src="{{asset('frontend/js/magnific-popup.js')}}"></script>
-	<!-- Waypoints JS -->
-	<script src="{{asset('frontend/js/waypoints.min.js')}}"></script>
-	<!-- Countdown JS -->
-	<script src="{{asset('frontend/js/finalcountdown.min.js')}}"></script>
-	<!-- Nice Select JS -->
-	<script src="{{asset('frontend/js/nicesellect.js')}}"></script>
-	<!-- Flex Slider JS -->
-	<script src="{{asset('frontend/js/flex-slider.js')}}"></script>
-	<!-- ScrollUp JS -->
-	<script src="{{asset('frontend/js/scrollup.js')}}"></script>
-	<!-- Onepage Nav JS -->
-	<script src="{{asset('frontend/js/onepage-nav.min.js')}}"></script>
-	{{-- Isotope --}}
-	<script src="{{asset('frontend/js/isotope/isotope.pkgd.min.js')}}"></script>
-	<!-- Easing JS -->
-	<script src="{{asset('frontend/js/easing.js')}}"></script>
+            {{-- Brand Info --}}
+            <div class="col-md-4">
+                <h6>{{ $settings_footer->name ?? config('app.name') }}</h6>
+                <p class="small mb-3">{{ $settings_footer->short_des ?? 'Quality products delivered to your doorstep with care and speed.' }}</p>
+                @if($settings_footer && $settings_footer->phone)
+                <p class="small mb-1"><i class="fas fa-phone-alt me-2"></i>{{ $settings_footer->phone }}</p>
+                @endif
+                @if($settings_footer && $settings_footer->email)
+                <p class="small mb-1"><i class="fas fa-envelope me-2"></i>{{ $settings_footer->email }}</p>
+                @endif
+                @if($settings_footer && $settings_footer->address)
+                <p class="small"><i class="fas fa-map-marker-alt me-2"></i>{{ $settings_footer->address }}</p>
+                @endif
+            </div>
 
-	<!-- Active JS -->
-	<script src="{{asset('frontend/js/active.js')}}"></script>
+            {{-- Information --}}
+            <div class="col-md-2 col-6">
+                <h6>Information</h6>
+                <a href="{{ route('about-us') }}">About Us</a>
+                <a href="{{ route('blog') }}">Blog</a>
+                <a href="{{ route('contact') }}">Contact Us</a>
+                <a href="#">FAQ</a>
+            </div>
 
-	
-	@stack('scripts')
-	<script>
-		setTimeout(function(){
-		  $('.alert').slideUp();
-		},5000);
-		$(function() {
-		// ------------------------------------------------------- //
-		// Multi Level dropdowns
-		// ------------------------------------------------------ //
-			$("ul.dropdown-menu [data-toggle='dropdown']").on("click", function(event) {
-				event.preventDefault();
-				event.stopPropagation();
+            {{-- Customer Service --}}
+            <div class="col-md-2 col-6">
+                <h6>Customer Service</h6>
+                <a href="#">Payment Methods</a>
+                <a href="#">Returns</a>
+                <a href="{{ route('order.track') }}">Track Order</a>
+                <a href="#">Privacy Policy</a>
+            </div>
 
-				$(this).siblings().toggleClass("show");
+            {{-- Account --}}
+            <div class="col-md-2 col-6">
+                <h6>My Account</h6>
+                @auth
+                    @if(Auth::user()->role == 'admin')
+                        <a href="{{ route('admin') }}">Admin Panel</a>
+                    @else
+                        <a href="{{ route('user') }}">Dashboard</a>
+                        <a href="{{ route('user.order.index') }}">My Orders</a>
+                        <a href="{{ route('user-profile') }}">Profile</a>
+                    @endif
+                    <a href="{{ route('user.logout') }}">Logout</a>
+                @else
+                    <a href="{{ route('login.form') }}">Login</a>
+                    <a href="{{ route('register.form') }}">Register</a>
+                @endauth
+            </div>
 
+            {{-- Shop --}}
+            <div class="col-md-2 col-6">
+                <h6>Shop</h6>
+                <a href="{{ route('product-grids') }}">All Products</a>
+                <a href="{{ route('wishlist') }}">Wishlist</a>
+                <a href="{{ route('cart') }}">Cart</a>
+                @auth
+                    <a href="{{ route('checkout') }}">Checkout</a>
+                @endauth
+            </div>
+        </div>
+    </div>
 
-				if (!$(this).next().hasClass('show')) {
-				$(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
-				}
-				$(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
-				$('.dropdown-submenu .show').removeClass("show");
-				});
+    <div class="footer-bottom">
+        &copy; {{ date('Y') }} {{ $settings_footer->name ?? config('app.name') }}. All rights reserved.
+    </div>
+</footer>
+{{-- ===== END FOOTER ===== --}}
 
-			});
-		});
-	  </script>
+{{-- ===== SCRIPTS ===== --}}
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+{{-- Keep existing frontend JS for features that rely on it --}}
+<script src="{{ asset('frontend/js/jquery-migrate-3.0.0.js') }}"></script>
+<script src="{{ asset('frontend/js/owl-carousel.js') }}"></script>
+<script src="{{ asset('frontend/js/colors.js') }}"></script>
+<script src="{{ asset('frontend/js/active.js') }}"></script>
+
+<script>
+    // Auto-dismiss alerts after 5s
+    setTimeout(function() { $('.alert').slideUp(400); }, 5000);
+</script>
+
+@stack('scripts')

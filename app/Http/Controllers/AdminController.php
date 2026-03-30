@@ -78,6 +78,7 @@ class AdminController extends Controller
     public function settingsUpdate(Request $request)
     {
         $validated = $request->validate([
+            'name' => 'required|string',
             'short_des' => 'required|string|max:500',
             'description' => 'required|string',
             'photo' => 'required|string|max:500',

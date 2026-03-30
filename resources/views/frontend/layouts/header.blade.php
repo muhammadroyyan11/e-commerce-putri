@@ -19,10 +19,10 @@
     <div class="container-fluid px-3 px-lg-4">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div class="d-flex align-items-center gap-3">
-                @if($settings && $settings->phone)
+                @if(($settings->phone ?? null))
                     <span><i class="fas fa-phone-alt me-1"></i>{{ $settings->phone }}</span>
                 @endif
-                @if($settings && $settings->email)
+                @if(($settings->email ?? null))
                     <span class="d-none d-md-inline"><i class="fas fa-envelope me-1"></i>{{ $settings->email }}</span>
                 @endif
             </div>
@@ -52,12 +52,12 @@
             {{-- Logo --}}
             <div class="col-6 col-lg-2">
                 <a href="{{ route('home') }}" class="d-flex align-items-center gap-2 text-decoration-none header-logo">
-                    @if($settings && $settings->logo)
+                    @if(($settings->logo ?? null))
                         <img src="{{ $settings->logo }}" alt="Logo">
                     @else
                         <img src="{{ asset('template-organik/images/logo.svg') }}" alt="Logo">
                     @endif
-                    @if($settings && $settings->name)
+                    @if(($settings->name ?? null))
                         <span class="d-none d-md-inline">{{ $settings->name }}</span>
                     @endif
                 </a>

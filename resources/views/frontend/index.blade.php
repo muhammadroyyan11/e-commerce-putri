@@ -1,5 +1,5 @@
 @extends('frontend.layouts.master')
-@section('title', ($settings_header->name ?? 'Shop') . ' - Home')
+@section('title', (DB::table('settings')->value('name') ?? 'Organik Store') . ' - Home')
 
 @section('main-content')
 

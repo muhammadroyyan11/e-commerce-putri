@@ -18,6 +18,7 @@ class SettingTableSeeder extends Seeder
 
                             sunt in culpa qui officia deserunt mollit anim id est laborum. sed ut perspiciatis Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. sed ut perspi deserunt mollit anim id est laborum. sed ut perspi.",
             'short_des'=>"Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus.",
+            'name'=>"Organik Store",
             'photo'=>"image.jpg",
             'logo'=>'logo.jpg',
             'address'=>"NO. 342 - London Oxford Street, 012 United Kingdom",

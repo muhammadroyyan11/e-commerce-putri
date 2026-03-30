@@ -17,6 +17,7 @@ class CreateSettingsTable extends Migration
             $table->id();
             $table->longText('description');
             $table->text('short_des');
+            $table->string('name');
             $table->string('logo');
             $table->string('photo');
             $table->string('address');

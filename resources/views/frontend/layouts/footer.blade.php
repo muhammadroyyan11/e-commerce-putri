@@ -11,13 +11,13 @@
             <div class="col-md-4">
                 <h6>{{ $settings_footer->name ?? config('app.name') }}</h6>
                 <p class="small mb-3">{{ $settings_footer->short_des ?? 'Quality products delivered to your doorstep with care and speed.' }}</p>
-                @if($settings_footer && $settings_footer->phone)
+                @if(($settings_footer->phone ?? null))
                 <p class="small mb-1"><i class="fas fa-phone-alt me-2"></i>{{ $settings_footer->phone }}</p>
                 @endif
-                @if($settings_footer && $settings_footer->email)
+                @if(($settings_footer->email ?? null))
                 <p class="small mb-1"><i class="fas fa-envelope me-2"></i>{{ $settings_footer->email }}</p>
                 @endif
-                @if($settings_footer && $settings_footer->address)
+                @if(($settings_footer->address ?? null))
                 <p class="small"><i class="fas fa-map-marker-alt me-2"></i>{{ $settings_footer->address }}</p>
                 @endif
             </div>

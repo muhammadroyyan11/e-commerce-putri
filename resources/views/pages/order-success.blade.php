@@ -30,12 +30,21 @@
             </div>
         </div>
 
+        @if(($order['payment_type'] ?? 'manual') === 'midtrans')
+        <div style="background: #dbeafe; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
+            <p style="font-size: 14px; color: #1e40af; margin: 0;">
+                <i class="fas fa-check-circle" style="margin-right: 8px;"></i>
+                Pembayaran Anda diproses melalui Midtrans. Status pesanan akan diperbarui otomatis setelah pembayaran dikonfirmasi.
+            </p>
+        </div>
+        @else
         <div style="background: var(--primary-lighter); border-radius: 12px; padding: 20px; margin-bottom: 30px;">
             <p style="font-size: 14px; color: var(--text-medium); margin: 0;">
                 <i class="fas fa-info-circle" style="color: var(--primary-color); margin-right: 8px;"></i>
-                {{ __('messages.order.email_info') }}
+                Silakan lakukan transfer sesuai metode pembayaran yang dipilih, lalu konfirmasi pembayaran Anda.
             </p>
         </div>
+        @endif
 
         @if(session('success'))
         <div class="alert alert-success" style="margin-bottom: 24px; border-radius: 12px;">
@@ -46,7 +55,7 @@
         <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
             <a href="{{ route('shop') }}" style="padding: 16px 36px; background: var(--gradient-primary); color: white; border-radius: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 10px;"><i class="fas fa-shopping-bag"></i> {{ __('messages.order.shop_again') }}</a>
             <a href="{{ route('customer.orders.index') }}" style="padding: 16px 36px; background: white; color: #14532d; border: 2px solid #86efac; border-radius: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 10px;"><i class="fas fa-box"></i> {{ __('messages.order.history') }}</a>
-            @if(!empty($order['id']))
+            @if(!empty($order['id']) && ($order['payment_type'] ?? 'manual') === 'manual')
             <a href="{{ route('payment-confirmation.create', $order['id']) }}" style="padding: 16px 36px; background: #fff7ed; color: #c2410c; border: 2px solid #fdba74; border-radius: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 10px;"><i class="fas fa-money-bill-wave"></i> {{ __('messages.order.confirm_payment') }}</a>
             @endif
         </div>

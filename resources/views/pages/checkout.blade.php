@@ -105,8 +105,19 @@
                                     <img src="{{ asset('storage/' . $method->logo) }}" alt="{{ $method->name }}" style="height: 28px; border-radius: 4px; background: #fff; padding: 2px; border: 1px solid #e5e7eb;">
                                 @endif
                                 <div>
-                                    <div style="font-weight: 600;">{{ $method->name }}</div>
+                                    <div style="font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                                        {{ $method->name }}
+                                        @if($method->isMidtrans())
+                                            <span style="font-size: 11px; font-weight: 600; background: #dbeafe; color: #1d4ed8; padding: 2px 8px; border-radius: 20px;">Midtrans</span>
+                                        @else
+                                            <span style="font-size: 11px; font-weight: 600; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 20px;">Transfer Manual</span>
+                                        @endif
+                                    </div>
+                                    @if($method->isManual())
                                     <div style="font-size: 13px; color: var(--text-medium);">{{ $method->account_number }} a.n. {{ $method->account_name }}</div>
+                                    @else
+                                    <div style="font-size: 13px; color: var(--text-medium);">Bayar via Midtrans (kartu kredit, transfer, e-wallet)</div>
+                                    @endif
                                 </div>
                             </label>
                             @empty

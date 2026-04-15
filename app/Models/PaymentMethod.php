@@ -11,6 +11,7 @@ class PaymentMethod extends Model
 
     protected $fillable = [
         'name',
+        'type',
         'account_name',
         'logo',
         'account_number',
@@ -36,5 +37,15 @@ class PaymentMethod extends Model
     public function getDisplayNameAttribute(): string
     {
         return "{$this->name} - {$this->account_number} a.n. {$this->account_name}";
+    }
+
+    public function isMidtrans(): bool
+    {
+        return $this->type === 'midtrans';
+    }
+
+    public function isManual(): bool
+    {
+        return $this->type === 'manual';
     }
 }

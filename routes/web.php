@@ -9,6 +9,7 @@ use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\PaymentConfirmationController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CustomerAuthController;
+use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -74,6 +75,12 @@ Route::middleware('auth')->group(function () {
 // Blog Routes
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.detail');
+
+// Midtrans Routes
+Route::post('/midtrans/notification', [MidtransController::class, 'notification'])->name('midtrans.notification')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::get('/midtrans/finish', [MidtransController::class, 'finish'])->name('midtrans.finish');
+Route::get('/midtrans/unfinish', [MidtransController::class, 'unfinish'])->name('midtrans.unfinish');
+Route::get('/midtrans/error', [MidtransController::class, 'error'])->name('midtrans.error');
 
 // Static Pages
 Route::get('/about', function () {

@@ -1,0 +1,137 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ShopController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CustomerOrderController;
+use App\Http\Controllers\PaymentConfirmationController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CustomerAuthController;
+use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\BlogPostController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\NewsletterController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\PaymentMethodController;
+use App\Http\Controllers\Admin\PaymentConfirmationController as AdminPaymentConfirmationController;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
+// Home Route
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Customer Auth Routes
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [CustomerAuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [CustomerAuthController::class, 'login']);
+    Route::get('/register', [CustomerAuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [CustomerAuthController::class, 'register']);
+    Route::get('/auth/google', [CustomerAuthController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('/auth/google/callback', [CustomerAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+});
+
+Route::post('/logout', [CustomerAuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+// Shop Routes
+Route::get('/shop', [ShopController::class, 'index'])->name('shop');
+Route::get('/shop/{slug}', [ShopController::class, 'show'])->name('product.detail');
+
+// Category Routes
+Route::get('/category/indoor', [ShopController::class, 'indoor'])->name('category.indoor');
+Route::get('/category/outdoor', [ShopController::class, 'outdoor'])->name('category.outdoor');
+Route::get('/category/succulent', [ShopController::class, 'succulent'])->name('category.succulent');
+Route::get('/category/rare', [ShopController::class, 'rare'])->name('category.rare');
+
+// Cart Routes (Require Auth)
+Route::middleware('auth')->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+
+    // Checkout Routes
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/order-success', [CheckoutController::class, 'success'])->name('order.success');
+    Route::get('/account/orders', [CustomerOrderController::class, 'index'])->name('customer.orders.index');
+    Route::get('/account/orders/{order}', [CustomerOrderController::class, 'show'])->name('customer.orders.show');
+
+    // Payment Confirmation Routes
+    Route::get('/orders/{order}/payment-confirmation', [PaymentConfirmationController::class, 'create'])->name('payment-confirmation.create');
+    Route::post('/orders/{order}/payment-confirmation', [PaymentConfirmationController::class, 'store'])->name('payment-confirmation.store');
+});
+
+// Blog Routes
+Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.detail');
+
+// Static Pages
+Route::get('/about', function () {
+    return view('pages.about');
+})->name('about');
+
+Route::get('/contact', function () {
+    return view('pages.contact');
+})->name('contact');
+
+Route::get('/care-guide', function () {
+    return view('pages.care-guide');
+})->name('care.guide');
+
+Route::get('/locale/{locale}', function ($locale) {
+    if (! in_array($locale, ['en', 'id'])) {
+        abort(404);
+    }
+
+    session(['locale' => $locale]);
+    app()->setLocale($locale);
+
+    return redirect()->to(url()->previous() ?: route('home'));
+})->name('locale.switch');
+
+// Wishlist Route (AJAX)
+Route::post('/wishlist/toggle', [ShopController::class, 'toggleWishlist'])->name('wishlist.toggle');
+
+// Newsletter Subscription
+Route::post('/newsletter/subscribe', [HomeController::class, 'subscribe'])->name('newsletter.subscribe');
+
+// Admin Routes
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Guest admin routes
+    Route::middleware('guest')->group(function () {
+        Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [AdminAuthController::class, 'login']);
+    });
+
+    // Protected admin routes
+    Route::middleware('admin')->group(function () {
+        Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        Route::resource('users', UserController::class);
+        Route::resource('categories', CategoryController::class);
+        Route::resource('products', ProductController::class);
+        Route::resource('blog-posts', BlogPostController::class);
+        Route::post('/upload-image', [\App\Http\Controllers\Admin\UploadController::class, 'uploadImage'])->name('upload-image');
+        Route::resource('orders', OrderController::class);
+        Route::resource('payment-methods', PaymentMethodController::class);
+        Route::get('/payment-confirmations', [AdminPaymentConfirmationController::class, 'index'])->name('payment-confirmations.index');
+        Route::get('/payment-confirmations/{paymentConfirmation}', [AdminPaymentConfirmationController::class, 'show'])->name('payment-confirmations.show');
+        Route::post('/payment-confirmations/{paymentConfirmation}/confirm', [AdminPaymentConfirmationController::class, 'confirm'])->name('payment-confirmations.confirm');
+        Route::post('/payment-confirmations/{paymentConfirmation}/reject', [AdminPaymentConfirmationController::class, 'reject'])->name('payment-confirmations.reject');
+        Route::resource('newsletters', NewsletterController::class)->only(['index', 'destroy']);
+
+        Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+    });
+});

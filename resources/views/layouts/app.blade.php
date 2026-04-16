@@ -33,6 +33,8 @@
     <!-- Footer -->
     @include('partials.footer')
 
+    @include('partials.mobile-bottom-nav')
+
     @include('partials.ai-chat-bubble', [
         'productId'   => $aiProductId   ?? null,
         'productName' => $aiProductName ?? null,

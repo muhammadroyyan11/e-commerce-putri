@@ -141,6 +141,20 @@
 #ai-messages::-webkit-scrollbar { width:4px; }
 #ai-messages::-webkit-scrollbar-track { background:transparent; }
 #ai-messages::-webkit-scrollbar-thumb { background:#d1fae5; border-radius:4px; }
+
+/* On mobile, lift bubble above bottom nav */
+@media (max-width: 992px) {
+    #ai-bubble-btn {
+        bottom: calc(72px + env(safe-area-inset-bottom, 0px) + 12px) !important;
+        width: 50px !important;
+        height: 50px !important;
+    }
+    #ai-chat-window {
+        bottom: calc(72px + env(safe-area-inset-bottom, 0px) + 72px) !important;
+        width: calc(100vw - 32px) !important;
+        right: 16px !important;
+    }
+}
 </style>
 
 <script>

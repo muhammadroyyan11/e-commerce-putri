@@ -96,14 +96,25 @@
                         <a href="{{ route('customer.orders.show', $order) }}" style="padding: 12px 18px; border-radius: 12px; text-decoration: none; font-weight: 700; color: #14532d; border: 1px solid #86efac; background: #f0fdf4;">{{ __('messages.orders.order_detail') }}</a>
                         @if($order->status === 'pending' && $order->payment_type)
                             <a href="{{ route('payment.detail', $order) }}" style="padding: 12px 18px; border-radius: 12px; text-decoration: none; font-weight: 700; color: white; background: #16a34a;">
-                                <i class="fas fa-wallet mr-1"></i> Bayar Sekarang
+                                <i class="fas fa-wallet mr-1"></i> {{ __('messages.orders.pay_now') }}
                             </a>
+                            <form action="{{ route('customer.orders.change-payment', $order) }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" style="padding: 12px 18px; border-radius: 12px; font-weight: 700; color: #1d4ed8; border: 1px solid #93c5fd; background: #eff6ff; cursor:pointer;">
+                                    <i class="fas fa-exchange-alt mr-1"></i> {{ __('messages.orders.change_payment') }}
+                                </button>
+                            </form>
                         @elseif($order->status === 'pending' && $order->paymentMethod?->isMidtrans() && !$order->payment_type)
                             <a href="{{ route('payment.select', $order) }}" style="padding: 12px 18px; border-radius: 12px; text-decoration: none; font-weight: 700; color: white; background: #16a34a;">
-                                <i class="fas fa-wallet mr-1"></i> Pilih Pembayaran
+                                <i class="fas fa-wallet mr-1"></i> {{ __('messages.orders.change_payment') }}
                             </a>
                         @elseif($canConfirm)
                             <a href="{{ route('payment-confirmation.create', $order) }}" style="padding: 12px 18px; border-radius: 12px; text-decoration: none; font-weight: 700; color: #9a3412; border: 1px solid #fdba74; background: #fff7ed;">{{ __('messages.orders.upload_payment_proof') }}</a>
+                        @endif
+                        @if($order->status === 'pending')
+                            <button onclick="showCancelModal({{ $order->id }})" style="padding: 12px 18px; border-radius: 12px; font-weight: 700; color: #991b1b; border: 1px solid #fca5a5; background: #fff1f2; cursor:pointer;">
+                                <i class="fas fa-times mr-1"></i> {{ __('messages.orders.cancel_order') }}
+                            </button>
                         @endif
                     </div>
                 </div>
@@ -143,3 +154,38 @@
 }
 </style>
 @endsection
+
+{{-- Cancel Modal --}}
+@push('scripts')
+<div id="cancel-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:20px; padding:32px; max-width:480px; width:90%; margin:auto;">
+        <h3 style="font-size:18px; font-weight:700; margin-bottom:8px;">{{ __('messages.orders.cancel_order') }}</h3>
+        <p style="font-size:14px; color:#64748b; margin-bottom:20px;">{{ __('messages.orders.cancel_confirm') }}</p>
+        <form id="cancel-form" method="POST">
+            @csrf
+            <textarea name="cancel_reason" required placeholder="{{ __('messages.orders.cancel_reason_placeholder') }}"
+                style="width:100%; padding:12px 16px; border:1px solid #e2e8f0; border-radius:12px; font-size:14px; resize:vertical; min-height:100px; margin-bottom:16px;"></textarea>
+            <div style="display:flex; gap:12px;">
+                <button type="button" onclick="hideCancelModal()"
+                    style="flex:1; padding:14px; border:1px solid #e2e8f0; border-radius:12px; font-weight:600; cursor:pointer; background:white;">
+                    {{ __('button.cancel') }}
+                </button>
+                <button type="submit"
+                    style="flex:1; padding:14px; background:#dc2626; color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
+                    {{ __('messages.orders.cancel_order') }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+function showCancelModal(orderId) {
+    document.getElementById('cancel-form').action = '/account/orders/' + orderId + '/cancel';
+    const modal = document.getElementById('cancel-modal');
+    modal.style.display = 'flex';
+}
+function hideCancelModal() {
+    document.getElementById('cancel-modal').style.display = 'none';
+}
+</script>
+@endpush

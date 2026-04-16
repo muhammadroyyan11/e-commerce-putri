@@ -53,6 +53,42 @@ class CustomerOrderController extends Controller
         ]);
     }
 
+    public function cancel(Order $order, \Illuminate\Http\Request $request): \Illuminate\Http\RedirectResponse
+    {
+        if ($order->customer_email !== auth()->user()->email) abort(403);
+        if (!in_array($order->status, ['pending'])) {
+            return back()->with('error', __('messages.orders.cannot_cancel'));
+        }
+
+        $request->validate(['cancel_reason' => 'required|string|max:500']);
+
+        $order->update(['status' => 'cancelled', 'cancel_reason' => $request->cancel_reason]);
+
+        return back()->with('success', __('messages.orders.cancel_success'));
+    }
+
+    public function changePayment(Order $order): \Illuminate\Http\RedirectResponse
+    {
+        if ($order->customer_email !== auth()->user()->email) abort(403);
+        if ($order->status !== 'pending') {
+            return back()->with('error', __('messages.orders.cannot_change_payment'));
+        }
+
+        // Reset payment info so customer can re-select
+        $order->update([
+            'payment_type'      => null,
+            'payment_token'     => null,
+            'payment_va_number' => null,
+            'payment_qr_url'    => null,
+            'payment_expired_at'=> null,
+        ]);
+
+        return redirect()->route('payment.select', $order);
+    }
+    {
+        return array_keys($this->statusOptions());
+    }
+
     private function statuses(): array
     {
         return array_keys($this->statusOptions());

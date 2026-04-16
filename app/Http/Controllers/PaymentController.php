@@ -25,6 +25,19 @@ class PaymentController extends Controller
 
         $method = $request->payment_method;
 
+        $methodLabels = [
+            'bca'       => 'BCA Virtual Account',
+            'bni'       => 'BNI Virtual Account',
+            'bri'       => 'BRI Virtual Account',
+            'permata'   => 'Permata Virtual Account',
+            'mandiri'   => 'Mandiri Bill Payment',
+            'gopay'     => 'GoPay',
+            'qris'      => 'QRIS',
+            'shopeepay' => 'ShopeePay',
+            'alfamart'  => 'Alfamart',
+            'indomaret' => 'Indomaret',
+        ];
+
         try {
             $result = match ($method) {
                 'bca'        => $midtrans->chargeVA($order, 'bca'),
@@ -47,6 +60,7 @@ class PaymentController extends Controller
             }
 
             $parsed = $midtrans->parseChargeResult($result);
+            $parsed['payment_method'] = $methodLabels[$method] ?? $order->payment_method;
             $order->update($parsed);
 
             return redirect()->route('payment.detail', $order);

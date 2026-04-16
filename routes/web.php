@@ -75,6 +75,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/order-success', [CheckoutController::class, 'success'])->name('order.success');
     Route::get('/account/orders', [CustomerOrderController::class, 'index'])->name('customer.orders.index');
     Route::get('/account/orders/{order}', [CustomerOrderController::class, 'show'])->name('customer.orders.show');
+    Route::post('/account/orders/{order}/cancel', [CustomerOrderController::class, 'cancel'])->name('customer.orders.cancel');
+    Route::post('/account/orders/{order}/change-payment', [CustomerOrderController::class, 'changePayment'])->name('customer.orders.change-payment');
 
     // Midtrans Custom Payment
     Route::get('/payment/{order}/select', [PaymentController::class, 'select'])->name('payment.select');

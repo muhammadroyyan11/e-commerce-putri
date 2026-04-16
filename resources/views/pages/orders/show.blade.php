@@ -16,9 +16,24 @@
             <a href="{{ route('customer.orders.index') }}" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: #14532d; font-weight: 700;">
                 <i class="fas fa-arrow-left"></i> {{ __('messages.orders.back_to_history') }}
             </a>
-            <span style="display: inline-flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 999px; background: {{ $statusMeta['bg'] }}; color: {{ $statusMeta['color'] }}; font-weight: 800;">
-                <i class="fas {{ $statusMeta['icon'] }}"></i> {{ $statusMeta['label'] }}
-            </span>
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                @if($order->status === 'pending' && $order->payment_type)
+                    <form action="{{ route('customer.orders.change-payment', $order) }}" method="POST">
+                        @csrf
+                        <button type="submit" style="padding:10px 16px; border-radius:10px; font-weight:600; color:#1d4ed8; border:1px solid #93c5fd; background:#eff6ff; cursor:pointer; font-size:13px;">
+                            <i class="fas fa-exchange-alt mr-1"></i> {{ __('messages.orders.change_payment') }}
+                        </button>
+                    </form>
+                @endif
+                @if($order->status === 'pending')
+                    <button onclick="showCancelModal()" style="padding:10px 16px; border-radius:10px; font-weight:600; color:#991b1b; border:1px solid #fca5a5; background:#fff1f2; cursor:pointer; font-size:13px;">
+                        <i class="fas fa-times mr-1"></i> {{ __('messages.orders.cancel_order') }}
+                    </button>
+                @endif
+                <span style="display: inline-flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 999px; background: {{ $statusMeta['bg'] }}; color: {{ $statusMeta['color'] }}; font-weight: 800;">
+                    <i class="fas {{ $statusMeta['icon'] }}"></i> {{ $statusMeta['label'] }}
+                </span>
+            </div>
         </div>
 
         <div class="order-detail-grid" style="display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.85fr); gap: 24px;">
@@ -53,7 +68,29 @@
                 <div style="background: white; border-radius: 28px; padding: 24px; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06);">
                     <h3 style="margin-bottom: 18px;">{{ __('messages.orders.payment_summary') }}</h3>
                     <div style="display: grid; gap: 12px; color: #475569;">
-                        <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.payment_method') }}</span><strong style="text-align: right; color: #0f172a;">{{ $order->paymentMethod?->display_name ?? $order->payment_method }}</strong></div>
+                        @php
+                            $paymentLabel = match($order->payment_type) {
+                                'bank_transfer' => collect($order->payment_va_number ? [
+                                    '008' => 'Mandiri', '009' => 'BNI', '014' => 'BCA',
+                                ] : [])->first() ?? 'Virtual Account',
+                                'echannel'  => 'Mandiri Bill',
+                                'gopay'     => 'GoPay',
+                                'qris'      => 'QRIS',
+                                'shopeepay' => 'ShopeePay',
+                                'cstore'    => 'Minimarket',
+                                default     => $order->paymentMethod?->name ?? $order->payment_method,
+                            };
+                            // Detect bank from VA prefix
+                            if ($order->payment_type === 'bank_transfer' && $order->payment_va_number) {
+                                $va = $order->payment_va_number;
+                                if (str_starts_with($va, '70012')) $paymentLabel = 'BCA Virtual Account';
+                                elseif (str_starts_with($va, '8808')) $paymentLabel = 'BNI Virtual Account';
+                                elseif (str_starts_with($va, '2621') || str_starts_with($va, '0328')) $paymentLabel = 'BRI Virtual Account';
+                                elseif (str_starts_with($va, '7088') || str_starts_with($va, '7089')) $paymentLabel = 'Permata Virtual Account';
+                                else $paymentLabel = 'Virtual Account';
+                            }
+                        @endphp
+                        <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.payment_method') }}</span><strong style="text-align: right; color: #0f172a;">{{ $paymentLabel }}</strong></div>
                         <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.subtotal') }}</span><strong style="color: #0f172a;">Rp{{ number_format($order->subtotal, 0, ',', '.') }}</strong></div>
                         <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.discount') }}</span><strong style="color: #0f172a;">Rp{{ number_format($order->discount, 0, ',', '.') }}</strong></div>
                         <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.shipping') }}</span><strong style="color: #0f172a;">Rp{{ number_format($order->shipping, 0, ',', '.') }}</strong></div>
@@ -123,4 +160,48 @@
     }
 }
 </style>
+
+@if($order->cancel_reason)
+<section style="padding: 0 0 40px; background: linear-gradient(180deg, #f8fafc 0%, #eefbf3 100%);">
+    <div class="container" style="max-width: 1120px;">
+        <div style="background:#fff1f2; border:1px solid #fca5a5; border-radius:16px; padding:20px 24px;">
+            <strong style="color:#991b1b;"><i class="fas fa-times-circle mr-2"></i>{{ __('messages.orders.cancel_reason_label') }}:</strong>
+            <p style="margin-top:6px; color:#7f1d1d;">{{ $order->cancel_reason }}</p>
+        </div>
+    </div>
+</section>
+@endif
+
 @endsection
+
+@push('scripts')
+<div id="cancel-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:20px; padding:32px; max-width:480px; width:90%; margin:auto;">
+        <h3 style="font-size:18px; font-weight:700; margin-bottom:8px;">{{ __('messages.orders.cancel_order') }}</h3>
+        <p style="font-size:14px; color:#64748b; margin-bottom:20px;">{{ __('messages.orders.cancel_confirm') }}</p>
+        <form action="{{ route('customer.orders.cancel', $order) }}" method="POST">
+            @csrf
+            <textarea name="cancel_reason" required placeholder="{{ __('messages.orders.cancel_reason_placeholder') }}"
+                style="width:100%; padding:12px 16px; border:1px solid #e2e8f0; border-radius:12px; font-size:14px; resize:vertical; min-height:100px; margin-bottom:16px;"></textarea>
+            <div style="display:flex; gap:12px;">
+                <button type="button" onclick="hideCancelModal()"
+                    style="flex:1; padding:14px; border:1px solid #e2e8f0; border-radius:12px; font-weight:600; cursor:pointer; background:white;">
+                    {{ __('messages.button.cancel') }}
+                </button>
+                <button type="submit"
+                    style="flex:1; padding:14px; background:#dc2626; color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
+                    {{ __('messages.orders.cancel_order') }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+function showCancelModal() {
+    document.getElementById('cancel-modal').style.display = 'flex';
+}
+function hideCancelModal() {
+    document.getElementById('cancel-modal').style.display = 'none';
+}
+</script>
+@endpush

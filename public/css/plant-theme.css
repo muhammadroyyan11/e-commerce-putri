@@ -1734,3 +1734,20 @@ input, textarea, select {
         width: 100%;
     }
 }
+
+/* ===== CARE GUIDE RESPONSIVE ===== */
+.cg-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.cg-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+.cg-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.cg-grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+
+@media (max-width: 768px) {
+    .cg-grid-4 { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .cg-grid-3 { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .cg-grid-2 { grid-template-columns: 1fr; gap: 16px; }
+    .cg-grid-2col { grid-template-columns: 1fr; gap: 24px; }
+}
+
+@media (max-width: 480px) {
+    .cg-grid-4 { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+}

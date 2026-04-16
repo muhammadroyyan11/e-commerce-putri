@@ -24,7 +24,7 @@
             <p style="color: #065f46; margin-top: 12px;">Empat pilar utama untuk tanaman yang sehat dan subur</p>
         </div>
         
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;">
+        <div class="cg-grid-4">
             <div style="background: white; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.1);">
                 <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 20px;">💧</div>
                 <h3 style="font-size: 18px; font-weight: 700; color: #064e3b; margin-bottom: 12px;">Penyiraman</h3>
@@ -55,7 +55,7 @@
 <!-- Watering Guide -->
 <section style="padding: 80px 0; background: white;">
     <div class="container">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
+        <div class="cg-grid-2col">
             <div>
                 <span style="display: inline-block; background: #dbeafe; color: #1e40af; padding: 8px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; margin-bottom: 20px;">💧 Panduan Penyiraman</span>
                 <h2 style="font-size: 36px; font-weight: 700; color: #064e3b; margin-bottom: 20px;">Kapan dan Bagaimana Menyiram</h2>
@@ -114,7 +114,7 @@
             <p style="color: #065f46; margin-top: 16px;">Pahami kebutuhan cahaya tanaman Anda</p>
         </div>
         
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+        <div class="cg-grid-3">
             <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
                 <div style="font-size: 48px; margin-bottom: 20px;">☀️</div>
                 <h3 style="font-size: 20px; font-weight: 700; color: #064e3b; margin-bottom: 12px;">Cahaya Terang (Bright Light)</h3>
@@ -168,7 +168,7 @@
             <p style="color: #065f46; margin-top: 16px;">Kenali tanda-tanda tanaman tidak sehat</p>
         </div>
         
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
+        <div class="cg-grid-2">
             <div style="background: #fef2f2; border-left: 4px solid #ef4444; padding: 24px; border-radius: 0 12px 12px 0;">
                 <h4 style="font-size: 18px; font-weight: 700; color: #991b1b; margin-bottom: 12px;">🍂 Daun Menguning</h4>
                 <p style="color: #7f1d1d; margin-bottom: 8px;"><strong>Penyebab:</strong> Penyiraman berlebihan, kekurangan nutrisi, atau cahaya tidak cukup.</p>
@@ -204,7 +204,7 @@
             <p style="color: #065f46; margin-top: 16px;">Sesuaikan perawatan dengan musim</p>
         </div>
         
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;">
+        <div class="cg-grid-4">
             <div style="background: white; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.1);">
                 <div style="font-size: 40px; margin-bottom: 16px;">🌸</div>
                 <h4 style="font-size: 18px; font-weight: 700; color: #064e3b; margin-bottom: 12px;">Musim Semi</h4>

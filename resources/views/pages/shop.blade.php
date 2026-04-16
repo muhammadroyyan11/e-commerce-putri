@@ -81,8 +81,14 @@
                         {{ __('messages.shop.showing') }} <span>1</span>-<span>{{ count($products) }}</span> {{ __('messages.shop.of') }} <span>{{ $categories->sum('count') }}</span> {{ __('messages.shop.plants') }}
                     </div>
                     <div class="toolbar-actions">
-                        <form action="{{ route('shop') }}" method="GET" id="sort-form">
-                            <select class="sort-select" name="sort" onchange="document.getElementById('sort-form').submit();">
+                        <form action="{{ route('shop') }}" method="GET" style="display:flex; gap:8px; align-items:center;">
+                            <div style="position:relative;">
+                                <input type="text" name="search" value="{{ $search ?? '' }}"
+                                    placeholder="{{ __('messages.shop.search_placeholder') }}"
+                                    style="padding:10px 16px 10px 38px; border:1px solid var(--border-color); border-radius:10px; font-size:14px; width:220px; outline:none;">
+                                <i class="fas fa-search" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-light); font-size:13px;"></i>
+                            </div>
+                            <select class="sort-select" name="sort" onchange="this.form.submit()">
                                 <option value="featured" {{ ($sort ?? 'featured') == 'featured' ? 'selected' : '' }}>{{ __('messages.shop.featured') }}</option>
                                 <option value="newest" {{ ($sort ?? '') == 'newest' ? 'selected' : '' }}>{{ __('messages.shop.newest') }}</option>
                                 <option value="price-low" {{ ($sort ?? '') == 'price-low' ? 'selected' : '' }}>{{ __('messages.shop.price_low') }}</option>
@@ -138,9 +144,9 @@
                                 <div class="care-icon" data-tooltip="{{ $product['care_level'] }}">✨</div>
                             </div>
                             <div class="plant-price">
-                                <span class="current">Rp {{ number_format($product['price'], 0, ',', '.') }}</span>
+                                <span class="current">{{ $currency->format($product['price'], $currentCurrency) }}</span>
                                 @if($product['original_price'])
-                                <span class="original">Rp {{ number_format($product['original_price'], 0, ',', '.') }}</span>
+                                <span class="original">{{ $currency->format($product['original_price'], $currentCurrency) }}</span>
                                 @endif
                             </div>
                         </div>

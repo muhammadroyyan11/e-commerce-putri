@@ -20,6 +20,10 @@ class ShopController extends Controller
             }
         }
 
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
         $sort = $request->get('sort', 'featured');
         if ($sort === 'price-low') {
             $query->orderBy('price', 'asc');
@@ -32,8 +36,9 @@ class ShopController extends Controller
         $products = $query->get()->map(fn($p) => $this->mapProduct($p));
         $categories = $this->getCategories();
         $wishlistIds = auth()->check() ? Wishlist::where('user_id', auth()->id())->pluck('product_id')->toArray() : [];
+        $search = $request->get('search', '');
 
-        return view('pages.shop', compact('products', 'categories', 'sort', 'wishlistIds'));
+        return view('pages.shop', compact('products', 'categories', 'sort', 'wishlistIds', 'search'));
     }
 
     public function show($slug)

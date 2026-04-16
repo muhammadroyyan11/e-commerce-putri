@@ -87,10 +87,14 @@
 
             {{-- QR Code --}}
             @if($order->payment_qr_url)
-            <div style="text-align:center; padding:20px;">
+            <div style="display:flex; flex-direction:column; align-items:center; padding:20px;">
                 <p style="font-size:13px; color:var(--text-medium); margin-bottom:12px;">Scan QR Code untuk membayar</p>
-                <img src="{{ $order->payment_qr_url }}" alt="QR Code" style="width:220px; height:220px; border:1px solid var(--border-color); border-radius:12px; padding:8px;">
+                <img src="{{ $order->payment_qr_url }}" alt="QR Code" id="qr-image" style="width:220px; height:220px; border:1px solid var(--border-color); border-radius:12px; padding:8px; display:block;">
                 <p style="font-size:12px; color:var(--text-medium); margin-top:8px;">Buka aplikasi GoPay / ShopeePay / QRIS</p>
+                <a href="{{ route('payment.qr-download', $order) }}"
+                    style="margin-top:12px; padding:10px 20px; background:var(--primary-color); color:white; border-radius:10px; font-size:13px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                    <i class="fas fa-download"></i> Download QR
+                </a>
             </div>
             @endif
 

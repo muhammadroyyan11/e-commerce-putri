@@ -43,7 +43,7 @@ $wishlistCount = auth()->check() ? Wishlist::where('user_id', auth()->id())->cou
                     <i class="fas fa-search"></i>
                 </button>
                 @auth
-                <button class="icon-btn wishlist-toggle" onclick="window.location.href='{{ route('shop') }}'">
+                <button class="icon-btn wishlist-toggle" onclick="window.location.href='{{ route('wishlist') }}'">
                     <i class="fas fa-heart"></i>
                     <span class="badge" id="wishlist-badge">{{ $wishlistCount }}</span>
                 </button>
@@ -62,6 +62,21 @@ $wishlistCount = auth()->check() ? Wishlist::where('user_id', auth()->id())->cou
                 <div class="language-switcher" style="display: flex; gap: 0.4rem; align-items: center;">
                     <a href="{{ route('locale.switch', 'id') }}" style="display: inline-flex; align-items: center; justify-content: center; min-width: 32px; padding: 0 8px; border-radius: 999px; border: 1px solid rgba(6, 78, 59, 0.2); color: inherit; text-decoration: none; opacity: {{ app()->getLocale() === 'id' ? '1' : '0.6' }}; font-size: 12px; height: 28px;">ID</a>
                     <a href="{{ route('locale.switch', 'en') }}" style="display: inline-flex; align-items: center; justify-content: center; min-width: 32px; padding: 0 8px; border-radius: 999px; border: 1px solid rgba(6, 78, 59, 0.2); color: inherit; text-decoration: none; opacity: {{ app()->getLocale() === 'en' ? '1' : '0.6' }}; font-size: 12px; height: 28px;">EN</a>
+                </div>
+                {{-- Currency Switcher --}}
+                <div style="position:relative; display:inline-block;">
+                    <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'"
+                        style="display:inline-flex; align-items:center; gap:4px; padding:0 10px; height:28px; border-radius:999px; border:1px solid rgba(6,78,59,0.2); background:transparent; font-size:12px; cursor:pointer; font-weight:600;">
+                        {{ $currentCurrency }} <i class="fas fa-chevron-down" style="font-size:9px;"></i>
+                    </button>
+                    <div style="display:none; position:absolute; right:0; top:34px; background:white; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.12); z-index:3000; padding:6px 0; min-width:80px;">
+                        @foreach(['IDR','USD','EUR','SGD','MYR','GBP','AUD','JPY'] as $cur)
+                        <a href="{{ route('currency.switch', $cur) }}"
+                            style="display:block; padding:7px 16px; font-size:13px; text-decoration:none; color:{{ $currentCurrency === $cur ? 'var(--primary-color)' : '#374151' }}; font-weight:{{ $currentCurrency === $cur ? '700' : '400' }};">
+                            {{ $cur }}
+                        </a>
+                        @endforeach
+                    </div>
                 </div>
                 @auth
                 <div class="dropdown" style="position: relative;">
@@ -92,7 +107,12 @@ $wishlistCount = auth()->check() ? Wishlist::where('user_id', auth()->id())->cou
 
     <div id="search-overlay" class="search-overlay" style="display: none;">
         <div class="search-container">
-            <input type="text" placeholder="{{ __('messages.common.search_placeholder') }}" id="search-input">
+            <form action="{{ route('shop') }}" method="GET" style="display:flex; align-items:center; width:100%;">
+                <input type="text" name="search" placeholder="{{ __('messages.common.search_placeholder') }}" id="search-input" autocomplete="off">
+                <button type="submit" style="background:none; border:none; cursor:pointer; padding:0 12px; color:var(--primary-color);">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
             <button onclick="toggleSearch()" class="close-search">
                 <i class="fas fa-times"></i>
             </button>

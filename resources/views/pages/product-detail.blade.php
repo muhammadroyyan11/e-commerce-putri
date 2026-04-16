@@ -34,9 +34,9 @@
                 
                 <div class="product-price-section" style="padding: 20px 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); margin: 20px 0;">
                     <div class="price-wrapper" style="display: flex; align-items: center; gap: 16px;">
-                        <span class="current-price" style="font-size: 32px; font-weight: 700; color: var(--primary-dark);">Rp {{ number_format($product['price'], 0, ',', '.') }}</span>
+                        <span class="current-price" style="font-size: 32px; font-weight: 700; color: var(--primary-dark);">{{ $currency->format($product['price'], $currentCurrency) }}</span>
                         @if($product['original_price'])
-                        <span class="original-price" style="font-size: 20px; color: var(--text-muted); text-decoration: line-through;">Rp {{ number_format($product['original_price'], 0, ',', '.') }}</span>
+                        <span class="original-price" style="font-size: 20px; color: var(--text-muted); text-decoration: line-through;">{{ $currency->format($product['original_price'], $currentCurrency) }}</span>
                         <span class="discount-badge" style="background: var(--error-color); color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;">-{{ $product['discount'] }}%</span>
                         @endif
                     </div>
@@ -123,9 +123,9 @@
                         <span><i class="fas fa-sun"></i> {{ $related['light'] }}</span>
                     </div>
                     <div class="plant-price">
-                        <span class="current">Rp {{ number_format($related['price'], 0, ',', '.') }}</span>
+                        <span class="current">{{ $currency->format($related['price'], $currentCurrency) }}</span>
                         @if($related['original_price'])
-                        <span class="original">Rp {{ number_format($related['original_price'], 0, ',', '.') }}</span>
+                        <span class="original">{{ $currency->format($related['original_price'], $currentCurrency) }}</span>
                         @endif
                     </div>
                 </div>

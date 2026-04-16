@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\CouponController as AdminCouponController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\WishlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +63,7 @@ Route::get('/category/rare', [ShopController::class, 'rare'])->name('category.ra
 // Cart Routes (Require Auth)
 Route::middleware('auth')->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
     Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
@@ -82,6 +84,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/payment/{order}/select', [PaymentController::class, 'select'])->name('payment.select');
     Route::post('/payment/{order}/process', [PaymentController::class, 'process'])->name('payment.process');
     Route::get('/payment/{order}/detail', [PaymentController::class, 'detail'])->name('payment.detail');
+    Route::get('/payment/{order}/qr-download', function (\App\Models\Order $order) {
+        abort_if($order->customer_email !== auth()->user()->email, 403);
+        abort_if(!$order->payment_qr_url, 404);
+        $content = file_get_contents($order->payment_qr_url);
+        return response($content, 200)
+            ->header('Content-Type', 'image/png')
+            ->header('Content-Disposition', 'attachment; filename="qr-' . $order->order_number . '.png"');
+    })->name('payment.qr-download');
 
     // Payment Confirmation Routes
     Route::get('/orders/{order}/payment-confirmation', [PaymentConfirmationController::class, 'create'])->name('payment-confirmation.create');
@@ -110,6 +120,14 @@ Route::get('/contact', function () {
 Route::get('/care-guide', function () {
     return view('pages.care-guide');
 })->name('care.guide');
+
+Route::get('/currency/{currency}', function ($currency) {
+    $supported = ['IDR', 'USD', 'EUR', 'SGD', 'MYR', 'GBP', 'AUD', 'JPY'];
+    if (in_array(strtoupper($currency), $supported)) {
+        session(['currency' => strtoupper($currency)]);
+    }
+    return redirect()->back();
+})->name('currency.switch');
 
 Route::get('/locale/{locale}', function ($locale) {
     if (! in_array($locale, ['en', 'id'])) {

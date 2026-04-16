@@ -85,9 +85,6 @@ class CustomerOrderController extends Controller
 
         return redirect()->route('payment.select', $order);
     }
-    {
-        return array_keys($this->statusOptions());
-    }
 
     private function statuses(): array
     {

@@ -110,6 +110,7 @@ return [
         'plants' => 'plants',
         'sort' => 'Sort',
         'featured' => 'Featured',
+        'search_placeholder' => 'Search plants...',
         'newest' => 'Newest',
         'price_low' => 'Price: Low to High',
         'price_high' => 'Price: High to Low',
@@ -238,6 +239,11 @@ return [
         'shipped' => 'Shipped',
         'completed' => 'Completed',
         'cancelled' => 'Cancelled',
+    ],
+    'wishlist' => [
+        'title' => 'My Wishlist',
+        'empty' => 'Your wishlist is empty',
+        'empty_desc' => 'Save your favorite plants here.',
     ],
     'payment_confirmation' => [
         'title' => 'Payment Confirmation',

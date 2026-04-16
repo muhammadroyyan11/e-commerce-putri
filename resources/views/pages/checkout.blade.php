@@ -168,27 +168,27 @@
                             <h4 style="font-size: 14px; font-weight: 600;">{{ $item['name'] }}</h4>
                             <p style="font-size: 12px; color: var(--text-light);">{{ $item['variant'] }}</p>
                         </div>
-                        <span style="font-weight: 600; font-size: 14px;">Rp {{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}</span>
+                        <span style="font-weight: 600; font-size: 14px;">{{ $currency->format($item['price'] * $item['quantity'], $currentCurrency) }}</span>
                     </div>
                     @endforeach
 
                     <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--border-color);">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px;">
                             <span>{{ __('messages.cart.subtotal') }}</span>
-                            <span>Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
+                            <span>{{ $currency->format($summary['subtotal'], $currentCurrency) }}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px;">
-                            <span>Ongkir</span>
-                            <span id="shipping-display" style="color: var(--text-medium);">Belum dipilih</span>
+                            <span>Ongkir / Shipping</span>
+                            <span id="shipping-display" style="color: var(--text-medium);">-</span>
                         </div>
                         <div id="coupon-discount-row" style="display: none; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: #16a34a;">
-                            <span>Diskon Coupon (<span id="coupon-code-label"></span>)</span>
+                            <span>Coupon (<span id="coupon-code-label"></span>)</span>
                             <span id="coupon-discount-amount"></span>
                         </div>
                         <div style="display: flex; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--border-color);">
                             <span style="font-size: 16px; font-weight: 700;">{{ __('messages.cart.total') }}</span>
                             <div style="text-align: right;">
-                                <span id="total-display" style="font-size: 24px; font-weight: 700; color: var(--primary-dark);">Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
+                                <span id="total-display" style="font-size: 24px; font-weight: 700; color: var(--primary-dark);">{{ $currency->format($summary['subtotal'], $currentCurrency) }}</span>
                             </div>
                         </div>
                     </div>
@@ -245,12 +245,22 @@
 <script>
 (function () {
     const subtotal = {{ $summary['subtotal'] }};
+    const currencyRate = {{ $currency->getRate($currentCurrency) }};
+    const currencySymbol = '{{ $currency->symbol($currentCurrency) }}';
+    const currencyCode = '{{ $currentCurrency }}';
     let shippingCost = 0;
     let couponDiscount = 0;
 
+    function formatMoney(idrAmount) {
+        const v = idrAmount * currencyRate;
+        return currencyCode === 'IDR'
+            ? 'Rp ' + Math.round(v).toLocaleString('id-ID')
+            : currencySymbol + v.toFixed(2);
+    }
+
     function updateTotal() {
         const total = Math.max(0, subtotal + shippingCost - couponDiscount);
-        document.getElementById('total-display').textContent = 'Rp ' + total.toLocaleString('id-ID');
+        document.getElementById('total-display').textContent = formatMoney(total);
     }
 
     // ── Country Select2 ──────────────────────────────────────────────────────
@@ -361,7 +371,7 @@
                         ${opt.etd !== '-' ? ' &nbsp;·&nbsp; <i class="fas fa-clock" style="font-size:11px"></i> ' + opt.etd : ''}
                     </div>
                 </div>
-                <span style="font-weight:700;font-size:15px;white-space:nowrap">Rp ${Number(opt.cost).toLocaleString('id-ID')}</span>
+                <span style="font-weight:700;font-size:15px;white-space:nowrap">${formatMoney(opt.cost)}</span>
             `;
             label.querySelector('input').addEventListener('change', () => selectShipping(opt));
             // highlight on select
@@ -383,7 +393,7 @@
         document.getElementById('shipping_courier').value = opt.courier;
         document.getElementById('shipping_service').value = opt.service;
         document.getElementById('shipping_etd').value = opt.etd;
-        document.getElementById('shipping-display').textContent = 'Rp ' + Number(opt.cost).toLocaleString('id-ID');
+        document.getElementById('shipping-display').textContent = formatMoney(opt.cost);
         document.getElementById('shipping-display').style.color = 'inherit';
         updateTotal();
     }
@@ -408,7 +418,7 @@
                 couponDiscount = data.discount;
                 document.getElementById('applied_coupon_code').value = data.code;
                 document.getElementById('coupon-code-label').textContent = data.code;
-                document.getElementById('coupon-discount-amount').textContent = '- ' + data.discount_formatted;
+                document.getElementById('coupon-discount-amount').textContent = '- ' + formatMoney(data.discount);
                 document.getElementById('coupon-discount-row').style.display = 'flex';
                 msg.style.color = '#16a34a';
                 msg.textContent = data.message;

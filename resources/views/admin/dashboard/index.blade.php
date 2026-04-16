@@ -11,7 +11,7 @@
         'processing' => ['class' => 'badge-info', 'label' => 'Diproses'],
         'shipped' => ['class' => 'badge-primary', 'label' => 'Dikirim'],
         'completed' => ['class' => 'badge-success', 'label' => 'Selesai'],
-        'cancelled' => ['class' => 'badge-danger', 'label' => 'Dibatalkan'],
+        'cancelled' => ['class' => 'badge-danger', 'label' => 'Cancelled'],
     ];
     $statusChartLabels = $statusBreakdown->map(fn ($item) => $orderBadges[$item['status']]['label'] ?? ucfirst($item['status']))->values();
     $statusChartValues = $statusBreakdown->pluck('count')->values();

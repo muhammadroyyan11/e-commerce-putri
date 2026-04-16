@@ -94,7 +94,15 @@
                     </div>
                     <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                         <a href="{{ route('customer.orders.show', $order) }}" style="padding: 12px 18px; border-radius: 12px; text-decoration: none; font-weight: 700; color: #14532d; border: 1px solid #86efac; background: #f0fdf4;">{{ __('messages.orders.order_detail') }}</a>
-                        @if($canConfirm)
+                        @if($order->status === 'pending' && $order->payment_type)
+                            <a href="{{ route('payment.detail', $order) }}" style="padding: 12px 18px; border-radius: 12px; text-decoration: none; font-weight: 700; color: white; background: #16a34a;">
+                                <i class="fas fa-wallet mr-1"></i> Bayar Sekarang
+                            </a>
+                        @elseif($order->status === 'pending' && $order->paymentMethod?->isMidtrans() && !$order->payment_type)
+                            <a href="{{ route('payment.select', $order) }}" style="padding: 12px 18px; border-radius: 12px; text-decoration: none; font-weight: 700; color: white; background: #16a34a;">
+                                <i class="fas fa-wallet mr-1"></i> Pilih Pembayaran
+                            </a>
+                        @elseif($canConfirm)
                             <a href="{{ route('payment-confirmation.create', $order) }}" style="padding: 12px 18px; border-radius: 12px; text-decoration: none; font-weight: 700; color: #9a3412; border: 1px solid #fdba74; background: #fff7ed;">{{ __('messages.orders.upload_payment_proof') }}</a>
                         @endif
                     </div>

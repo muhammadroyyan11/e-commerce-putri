@@ -94,20 +94,20 @@
 
                     <!-- Shipping Options -->
                     <div style="background: white; border-radius: 16px; padding: 30px; margin-bottom: 20px;">
-                        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;"><i class="fas fa-truck" style="color: var(--primary-color); margin-right: 10px;"></i> Pengiriman</h3>
+                        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;"><i class="fas fa-truck" style="color: var(--primary-color); margin-right: 10px;"></i> Shipping / Pengiriman</h3>
 
                         {{-- Kota (hanya Indonesia) --}}
                         <div id="city-wrapper" style="display:none; margin-bottom: 16px;">
-                            <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px;">Kota Tujuan *</label>
+                            <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px;">Kota Tujuan / Destination City *</label>
                             <select id="city-select" style="width: 100%;"></select>
                         </div>
 
                         <div id="shipping-loading" style="display:none; font-size:14px; color: var(--text-medium);">
-                            <i class="fas fa-spinner fa-spin mr-1"></i> Mengambil opsi pengiriman...
+                            <i class="fas fa-spinner fa-spin mr-1"></i> Calculating shipping cost...
                         </div>
                         <div id="shipping-options" style="display:flex; flex-direction:column; gap:10px;"></div>
                         <div id="shipping-placeholder" style="font-size:14px; color: var(--text-medium);">
-                            Pilih negara & kota tujuan untuk melihat opsi pengiriman.
+                            <i class="fas fa-info-circle mr-1"></i> Select your country to see shipping options.
                         </div>
 
                         <input type="hidden" name="shipping_cost" id="shipping_cost" value="0">
@@ -342,26 +342,38 @@
         const container = document.getElementById('shipping-options');
         container.innerHTML = '';
         if (!options.length) {
-            container.innerHTML = '<p style="font-size:14px;color:var(--text-medium)">Tidak ada opsi pengiriman tersedia.</p>';
+            container.innerHTML = '<p style="font-size:14px;color:var(--text-medium)">No shipping options available for this destination.</p>';
             return;
         }
         options.forEach((opt, i) => {
-            const id = 'ship_' + i;
+            const isIntl = opt.courier === 'INTL';
             const label = document.createElement('label');
-            label.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg-light);border-radius:10px;cursor:pointer;border:1px solid transparent;';
+            label.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg-light);border-radius:10px;cursor:pointer;border:2px solid transparent;transition:border-color .2s;';
             label.innerHTML = `
                 <input type="radio" name="_shipping_option" value="${i}" ${i === 0 ? 'checked' : ''} style="accent-color:var(--primary-color)">
                 <div style="flex:1">
-                    <div style="font-weight:600;font-size:14px">${opt.courier} - ${opt.service}</div>
-                    <div style="font-size:12px;color:var(--text-medium)">${opt.description} · ETD: ${opt.etd}</div>
+                    <div style="font-weight:600;font-size:14px">
+                        ${isIntl ? '<i class="fas fa-globe" style="color:var(--primary-color);margin-right:6px"></i>' : ''}
+                        ${opt.courier} — ${opt.service}
+                    </div>
+                    <div style="font-size:12px;color:var(--text-medium);margin-top:2px">
+                        ${opt.description}
+                        ${opt.etd !== '-' ? ' &nbsp;·&nbsp; <i class="fas fa-clock" style="font-size:11px"></i> ' + opt.etd : ''}
+                    </div>
                 </div>
-                <span style="font-weight:700;font-size:14px">Rp ${Number(opt.cost).toLocaleString('id-ID')}</span>
+                <span style="font-weight:700;font-size:15px;white-space:nowrap">Rp ${Number(opt.cost).toLocaleString('id-ID')}</span>
             `;
-            label.querySelector('input').addEventListener('change', function () {
-                selectShipping(opt);
+            label.querySelector('input').addEventListener('change', () => selectShipping(opt));
+            // highlight on select
+            label.addEventListener('click', () => {
+                container.querySelectorAll('label').forEach(l => l.style.borderColor = 'transparent');
+                label.style.borderColor = 'var(--primary-color)';
             });
             container.appendChild(label);
-            if (i === 0) selectShipping(opt);
+            if (i === 0) {
+                selectShipping(opt);
+                label.style.borderColor = 'var(--primary-color)';
+            }
         });
     }
 

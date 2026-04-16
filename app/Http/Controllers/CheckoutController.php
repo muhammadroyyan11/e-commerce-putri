@@ -116,7 +116,7 @@ class CheckoutController extends Controller
         Cart::where('user_id', auth()->id())->delete();
 
         if ($paymentMethod->isMidtrans()) {
-            return $this->redirectToMidtrans($order, $validated);
+            return redirect()->route('payment.select', $order);
         }
 
         return redirect()->route('order.success')->with('order', $order);

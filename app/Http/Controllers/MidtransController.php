@@ -3,28 +3,38 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Services\MidtransService;
 use Illuminate\Http\Request;
-use Midtrans\Config as MidtransConfig;
-use Midtrans\Notification;
 
 class MidtransController extends Controller
 {
-    public function __construct()
+    public function notification(Request $request, MidtransService $midtrans)
     {
-        MidtransConfig::$serverKey = config('services.midtrans.server_key');
-        MidtransConfig::$isProduction = config('services.midtrans.is_production');
-    }
+        $payload = $request->all();
 
-    public function notification(Request $request)
-    {
-        $notification = new Notification();
+        // Verify signature
+        $signatureKey = $payload['signature_key'] ?? '';
+        $orderId      = $payload['order_id'] ?? '';
+        $statusCode   = $payload['status_code'] ?? '';
+        $grossAmount  = $payload['gross_amount'] ?? '';
 
-        $order = Order::where('order_number', $notification->order_id)->firstOrFail();
+        if (!$midtrans->verifySignature($orderId, $statusCode, $grossAmount, $signatureKey)) {
+            return response()->json(['status' => 'invalid signature'], 403);
+        }
 
-        $status = match ($notification->transaction_status) {
-            'capture', 'settlement' => 'processing',
-            'pending' => 'pending',
-            'deny', 'cancel', 'expire' => 'cancelled',
+        $order = Order::where('order_number', $orderId)->first();
+        if (!$order) {
+            return response()->json(['status' => 'order not found'], 404);
+        }
+
+        $transactionStatus = $payload['transaction_status'] ?? '';
+        $fraudStatus       = $payload['fraud_status'] ?? '';
+
+        $status = match (true) {
+            $transactionStatus === 'capture' && $fraudStatus === 'accept' => 'processing',
+            $transactionStatus === 'settlement'                           => 'processing',
+            $transactionStatus === 'pending'                              => 'pending',
+            in_array($transactionStatus, ['deny', 'cancel', 'expire'])   => 'cancelled',
             default => $order->status,
         };
 
@@ -35,19 +45,28 @@ class MidtransController extends Controller
 
     public function finish(Request $request)
     {
-        $orderNumber = $request->query('order_id');
-        $order = Order::where('order_number', $orderNumber)->first();
-
-        return redirect()->route('order.success')->with('order', $order);
+        $order = Order::where('order_number', $request->query('order_id'))->first();
+        if ($order) {
+            return redirect()->route('payment.detail', $order);
+        }
+        return redirect()->route('home');
     }
 
     public function unfinish(Request $request)
     {
-        return redirect()->route('checkout')->with('error', 'Pembayaran belum selesai. Silakan coba lagi.');
+        $order = Order::where('order_number', $request->query('order_id'))->first();
+        if ($order) {
+            return redirect()->route('payment.detail', $order);
+        }
+        return redirect()->route('home');
     }
 
     public function error(Request $request)
     {
-        return redirect()->route('checkout')->with('error', 'Pembayaran gagal. Silakan coba lagi.');
+        $order = Order::where('order_number', $request->query('order_id'))->first();
+        if ($order) {
+            return redirect()->route('payment.detail', $order)->with('error', 'Pembayaran gagal.');
+        }
+        return redirect()->route('home');
     }
 }

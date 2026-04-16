@@ -113,7 +113,10 @@ class ShippingService
         $originCountry = ApiSetting::get('shippo_origin_country', 'ID');
 
         // Create shipment
-        $response = Http::withToken($token)
+        $response = Http::withHeaders([
+                'Authorization' => 'ShippoToken ' . $token,
+                'Content-Type'  => 'application/json',
+            ])
             ->post('https://api.goshippo.com/shipments/', [
                 'address_from' => ['country' => $originCountry, 'zip' => $originZip],
                 'address_to'   => ['country' => $this->countryToIso($country)],

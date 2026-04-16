@@ -64,7 +64,35 @@
 
                 <div style="background: white; border-radius: 28px; padding: 24px; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06);">
                     <h3 style="margin-bottom: 18px;">{{ __('messages.orders.payment_status') }}</h3>
-                    @if($order->paymentConfirmation)
+
+                    {{-- Midtrans payment info --}}
+                    @if($order->payment_type && $order->status === 'pending')
+                        @if($order->payment_va_number)
+                        <div style="text-align:center; padding:16px; background:#f0fdf4; border-radius:12px; margin-bottom:16px;">
+                            <p style="font-size:12px; color:#64748b; margin-bottom:6px;">
+                                {{ in_array($order->payment_type, ['cstore']) ? 'Kode Bayar' : 'Nomor Virtual Account' }}
+                            </p>
+                            <div style="font-size:22px; font-weight:800; letter-spacing:3px;">{{ $order->payment_va_number }}</div>
+                        </div>
+                        @endif
+                        @if($order->payment_qr_url)
+                        <div style="text-align:center; margin-bottom:16px;">
+                            <img src="{{ $order->payment_qr_url }}" style="width:180px; height:180px; border-radius:10px; border:1px solid #e2e8f0;">
+                        </div>
+                        @endif
+                        @if($order->payment_expired_at)
+                        <p style="font-size:13px; color:#b45309; text-align:center; margin-bottom:16px;">
+                            <i class="fas fa-clock mr-1"></i> Bayar sebelum {{ $order->payment_expired_at->format('d M Y, H:i') }}
+                        </p>
+                        @endif
+                        <a href="{{ route('payment.detail', $order) }}" style="display:block; text-align:center; padding:14px; background:#16a34a; color:white; border-radius:12px; font-weight:700; text-decoration:none;">
+                            <i class="fas fa-wallet mr-1"></i> Lihat Detail Pembayaran
+                        </a>
+                    @elseif($order->status === 'pending' && $order->paymentMethod?->isMidtrans() && !$order->payment_type)
+                        <a href="{{ route('payment.select', $order) }}" style="display:block; text-align:center; padding:14px; background:#16a34a; color:white; border-radius:12px; font-weight:700; text-decoration:none;">
+                            <i class="fas fa-wallet mr-1"></i> Pilih Metode Pembayaran
+                        </a>
+                    @elseif($order->paymentConfirmation)
                         <div style="display: grid; gap: 10px; color: #475569;">
                             <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.amount') }}</span><strong style="color: #0f172a;">Rp{{ number_format($order->paymentConfirmation->amount, 0, ',', '.') }}</strong></div>
                             <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.sender') }}</span><strong style="color: #0f172a;">{{ $order->paymentConfirmation->sender_name }}</strong></div>

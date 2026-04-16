@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\ShippingZoneController as AdminShippingZoneContro
 use App\Http\Controllers\Admin\CouponController as AdminCouponController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\ShippingController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,6 +75,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/order-success', [CheckoutController::class, 'success'])->name('order.success');
     Route::get('/account/orders', [CustomerOrderController::class, 'index'])->name('customer.orders.index');
     Route::get('/account/orders/{order}', [CustomerOrderController::class, 'show'])->name('customer.orders.show');
+
+    // Midtrans Custom Payment
+    Route::get('/payment/{order}/select', [PaymentController::class, 'select'])->name('payment.select');
+    Route::post('/payment/{order}/process', [PaymentController::class, 'process'])->name('payment.process');
+    Route::get('/payment/{order}/detail', [PaymentController::class, 'detail'])->name('payment.detail');
 
     // Payment Confirmation Routes
     Route::get('/orders/{order}/payment-confirmation', [PaymentConfirmationController::class, 'create'])->name('payment-confirmation.create');

@@ -15,13 +15,15 @@ class Order extends Model
         'status', 'subtotal', 'discount', 'shipping', 'total', 'notes',
         'coupon_code', 'coupon_discount',
         'shipping_courier', 'shipping_service', 'shipping_etd',
+        'payment_type', 'payment_token', 'payment_va_number', 'payment_qr_url', 'payment_expired_at',
     ];
 
     protected $casts = [
-        'subtotal' => 'decimal:2',
-        'discount' => 'decimal:2',
-        'shipping' => 'decimal:2',
-        'total' => 'decimal:2',
+        'subtotal'            => 'decimal:2',
+        'discount'            => 'decimal:2',
+        'shipping'            => 'decimal:2',
+        'total'               => 'decimal:2',
+        'payment_expired_at'  => 'datetime',
     ];
 
     public function items()

@@ -21,6 +21,11 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\PaymentConfirmationController as AdminPaymentConfirmationController;
+use App\Http\Controllers\Admin\ApiSettingController as AdminApiSettingController;
+use App\Http\Controllers\Admin\ShippingZoneController as AdminShippingZoneController;
+use App\Http\Controllers\Admin\CouponController as AdminCouponController;
+use App\Http\Controllers\CouponController;
+use App\Http\Controllers\ShippingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +68,9 @@ Route::middleware('auth')->group(function () {
     // Checkout Routes
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::post('/coupon/apply', [CouponController::class, 'apply'])->name('coupon.apply');
+    Route::post('/shipping/options', [ShippingController::class, 'getOptions'])->name('shipping.options');
+    Route::get('/shipping/cities', [ShippingController::class, 'getCities'])->name('shipping.cities');
     Route::get('/order-success', [CheckoutController::class, 'success'])->name('order.success');
     Route::get('/account/orders', [CustomerOrderController::class, 'index'])->name('customer.orders.index');
     Route::get('/account/orders/{order}', [CustomerOrderController::class, 'show'])->name('customer.orders.show');
@@ -137,6 +145,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/payment-confirmations/{paymentConfirmation}/confirm', [AdminPaymentConfirmationController::class, 'confirm'])->name('payment-confirmations.confirm');
         Route::post('/payment-confirmations/{paymentConfirmation}/reject', [AdminPaymentConfirmationController::class, 'reject'])->name('payment-confirmations.reject');
         Route::resource('newsletters', NewsletterController::class)->only(['index', 'destroy']);
+        Route::resource('coupons', AdminCouponController::class);
+
+        Route::get('/api-settings', [AdminApiSettingController::class, 'index'])->name('api-settings.index');
+        Route::put('/api-settings', [AdminApiSettingController::class, 'update'])->name('api-settings.update');
+        Route::resource('shipping-zones', AdminShippingZoneController::class)->except(['create','edit','show']);
 
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');

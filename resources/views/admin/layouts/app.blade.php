@@ -101,7 +101,25 @@
                                 <p>Metode Pembayaran</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.coupons.index') }}" class="nav-link {{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-ticket-alt"></i>
+                                <p>Coupon / Voucher</p>
+                            </a>
+                        </li>
                         <li class="nav-header">KONFIGURASI</li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.api-settings.index') }}" class="nav-link {{ request()->routeIs('admin.api-settings.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-plug"></i>
+                                <p>API Settings</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.shipping-zones.index') }}" class="nav-link {{ request()->routeIs('admin.shipping-zones.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-globe-asia"></i>
+                                <p>Zona Pengiriman</p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.settings.index') }}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-cogs"></i>
@@ -162,6 +180,13 @@
     <script>
         $(function () {
             $('.datatable').each(function () {
+                // Skip jika tabel kosong (hanya ada baris colspan)
+                if ($(this).find('tbody tr td[colspan]').length > 0 && $(this).find('tbody tr').length === 1) {
+                    return;
+                }
+                if ($.fn.DataTable.isDataTable(this)) {
+                    $(this).DataTable().destroy();
+                }
                 $(this).DataTable({
                     pageLength: 10,
                     lengthChange: true,

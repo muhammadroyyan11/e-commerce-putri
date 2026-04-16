@@ -11,8 +11,10 @@ class Order extends Model
 
     protected $fillable = [
         'order_number', 'customer_name', 'customer_email', 'customer_phone',
-        'address', 'city', 'province', 'postal_code', 'payment_method', 'payment_method_id',
-        'status', 'subtotal', 'discount', 'shipping', 'total', 'notes'
+        'address', 'city', 'province', 'country', 'postal_code', 'payment_method', 'payment_method_id',
+        'status', 'subtotal', 'discount', 'shipping', 'total', 'notes',
+        'coupon_code', 'coupon_discount',
+        'shipping_courier', 'shipping_service', 'shipping_etd',
     ];
 
     protected $casts = [

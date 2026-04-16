@@ -97,6 +97,14 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Berat (gram) <small class="text-muted">untuk kalkulasi ongkir</small></label>
+                        <input type="number" name="weight" class="form-control" value="{{ old('weight', 500) }}" min="1" required>
+                    </div>
+                </div>
+            </div>
             <div class="form-group">
                 <label>URL Gambar</label>
                 <input type="text" name="image" class="form-control" value="{{ old('image') }}">

@@ -38,6 +38,7 @@ class ProductController extends Controller
             'watering' => 'nullable|string|max:255',
             'badge' => 'nullable|string|max:255',
             'stock' => 'nullable|integer|min:0',
+            'weight' => 'required|integer|min:1',
             'is_active' => 'boolean',
         ]);
 
@@ -71,6 +72,7 @@ class ProductController extends Controller
             'watering' => 'nullable|string|max:255',
             'badge' => 'nullable|string|max:255',
             'stock' => 'nullable|integer|min:0',
+            'weight' => 'required|integer|min:1',
             'is_active' => 'boolean',
         ]);
 

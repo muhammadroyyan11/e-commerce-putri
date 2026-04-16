@@ -1664,3 +1664,73 @@ input, textarea, select {
         width: 50px;
     }
 }
+
+/* ===== SHOP MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .shop-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .shop-sidebar {
+        position: static;
+        order: 2; /* sidebar di bawah produk di mobile */
+    }
+
+    .shop-main {
+        order: 1;
+    }
+
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px;
+    }
+
+    .plant-card .plant-image {
+        height: 160px;
+    }
+
+    .plant-card .plant-info {
+        padding: 10px 12px;
+    }
+
+    .plant-card .plant-name {
+        font-size: 13px;
+    }
+
+    .plant-card .plant-price .current {
+        font-size: 14px;
+    }
+
+    .plant-card .plant-actions {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .plant-card .btn-add-cart {
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+
+    .shop-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 16px;
+    }
+
+    .toolbar-actions {
+        width: 100%;
+    }
+
+    .toolbar-actions form {
+        width: 100%;
+    }
+
+    .toolbar-actions form input[type="text"] {
+        width: 100% !important;
+    }
+
+    .toolbar-actions .sort-select {
+        width: 100%;
+    }
+}

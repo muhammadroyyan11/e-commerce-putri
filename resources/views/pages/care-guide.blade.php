@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Panduan Perawatan Tanaman - GreenHaven')
-@section('meta_description', 'Pelajari cara merawat tanaman hias indoor dan outdoor dengan panduan lengkap dari GreenHaven. Tips penyiraman, pencahayaan, dan pemupukan.')
+@section('title', 'Panduan Perawatan Tanaman - LongLeaf')
+@section('meta_description', 'Pelajari cara merawat tanaman hias indoor dan outdoor dengan panduan lengkap dari LongLeaf. Tips penyiraman, pencahayaan, dan pemupukan.')
 
 @section('content')
 <!-- Page Banner -->

@@ -1,4 +1,4 @@
-# GreenHaven / LongLeaf — Feature Documentation
+# LongLeaf / LongLeaf — Feature Documentation
 
 ## Tech Stack
 - **Framework**: Laravel 10
@@ -220,4 +220,4 @@
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | admin@greenhaven.id | password |
+| Admin | admin@LongLeaf.id | password |

@@ -22,7 +22,7 @@
 
 <div class="dashboard-hero mb-4">
     <div>
-        <span class="dashboard-kicker">GreenHaven Admin Overview</span>
+        <span class="dashboard-kicker">LongLeaf Admin Overview</span>
         <h2 class="dashboard-title">Pantau toko, pesanan, dan konten dari satu panel yang lebih hidup.</h2>
         <p class="dashboard-subtitle">Ringkasan ini menonjolkan kesehatan operasional harian: penjualan, progres pesanan, performa katalog, dan aktivitas pelanggan.</p>
         <div class="dashboard-actions">

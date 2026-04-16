@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('messages.payment_confirmation.title') . ' - ' . App\Models\Setting::get('site_name', 'GreenHaven'))
+@section('title', __('messages.payment_confirmation.title') . ' - ' . App\Models\Setting::get('site_name', 'LongLeaf'))
 
 @section('content')
 <section class="page-banner">

@@ -1,6 +1,6 @@
 @php
     $isId        = app()->getLocale() === 'id';
-    $siteName    = App\Models\Setting::get('site_name', 'GreenHaven');
+    $siteName    = App\Models\Setting::get('site_name', 'LongLeaf');
     $productId   = $productId   ?? null;
     $productName = $productName ?? null;
     $aiRoute     = auth()->check() ? route('ai.chat') : route('ai.chat.guest');

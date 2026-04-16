@@ -12,7 +12,7 @@ class SettingController extends Controller
     public function index()
     {
         $settings = [
-            'site_name' => Setting::get('site_name', 'GreenHaven'),
+            'site_name' => Setting::get('site_name', 'LongLeaf'),
             'site_logo' => Setting::get('site_logo', ''),
             'payment_methods' => Setting::get('payment_methods', "Transfer Bank BCA\nTransfer Bank Mandiri\nCOD (Bayar di Tempat)"),
         ];

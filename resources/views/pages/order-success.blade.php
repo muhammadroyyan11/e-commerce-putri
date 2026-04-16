@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('messages.order.success_title') . ' - ' . App\Models\Setting::get('site_name', 'GreenHaven'))
+@section('title', __('messages.order.success_title') . ' - ' . App\Models\Setting::get('site_name', 'LongLeaf'))
 
 @section('content')
 <div style="min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 60px 20px; background: var(--bg-light);">
@@ -9,7 +9,7 @@
             <i class="fas fa-check"></i>
         </div>
         <h1 style="font-size: 32px; font-weight: 700; margin-bottom: 16px; color: var(--text-dark);">{{ __('messages.order.success_title') }}</h1>
-        <p style="color: var(--text-medium); margin-bottom: 30px; font-size: 16px;">{{ __('messages.order.success_desc', ['site' => App\Models\Setting::get('site_name', 'GreenHaven')]) }}</p>
+        <p style="color: var(--text-medium); margin-bottom: 30px; font-size: 16px;">{{ __('messages.order.success_desc', ['site' => App\Models\Setting::get('site_name', 'LongLeaf')]) }}</p>
         
         <div style="background: var(--bg-light); border-radius: 20px; padding: 30px; margin-bottom: 30px; text-align: left;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 14px; font-size: 15px;">

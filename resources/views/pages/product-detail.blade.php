@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $product['name'] . ' - ' . App\Models\Setting::get('site_name', 'GreenHaven'))
+@section('title', $product['name'] . ' - ' . App\Models\Setting::get('site_name', 'LongLeaf'))
 
 @push('styles')
 <style>

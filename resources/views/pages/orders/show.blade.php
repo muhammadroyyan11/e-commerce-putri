@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('messages.orders.order_detail') . ' - GreenHaven')
+@section('title', __('messages.orders.order_detail') . ' - LongLeaf')
 
 @section('content')
 <section class="page-banner" style="padding: 60px 0;">

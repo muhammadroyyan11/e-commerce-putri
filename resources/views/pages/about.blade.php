@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', __('messages.about.title', ['site' => App\Models\Setting::get('site_name', 'GreenHaven')]))
-@section('meta_description', 'Kenali ' . App\Models\Setting::get('site_name', 'GreenHaven') . ' - Toko tanaman online terpercaya dengan komitmen menghadirkan tanaman berkualitas dan edukasi perawatan.')
+@section('title', __('messages.about.title', ['site' => App\Models\Setting::get('site_name', 'LongLeaf')]))
+@section('meta_description', 'Kenali ' . App\Models\Setting::get('site_name', 'LongLeaf') . ' - Toko tanaman online terpercaya dengan komitmen menghadirkan tanaman berkualitas dan edukasi perawatan.')
 
 @section('content')
 <!-- Page Banner -->
 <section class="page-banner" style="background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%); color: white; padding: 60px 0; text-align: center;">
     <div class="container">
-        <h1 style="font-size: 42px; font-weight: 700; margin-bottom: 16px;">🌿 {{ __('messages.about.title', ['site' => App\Models\Setting::get('site_name', 'GreenHaven')]) }}</h1>
+        <h1 style="font-size: 42px; font-weight: 700; margin-bottom: 16px;">🌿 {{ __('messages.about.title', ['site' => App\Models\Setting::get('site_name', 'LongLeaf')]) }}</h1>
         <div style="display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 14px;">
             <a href="/" style="color: rgba(255,255,255,0.8);">{{ __('messages.common.home') }}</a>
             <span>/</span>
@@ -22,17 +22,17 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
             <div>
                 <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&h=400&fit=crop" 
-                     alt="GreenHaven Team" 
+                     alt="LongLeaf Team" 
                      style="width: 100%; border-radius: 20px; box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2);">
             </div>
             <div>
                 <span style="display: inline-block; background: #d1fae5; color: #059669; padding: 8px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; margin-bottom: 20px;">📖 {{ __('messages.about.story_tag') }}</span>
                 <h2 style="font-size: 36px; font-weight: 700; color: #064e3b; margin-bottom: 20px; line-height: 1.2;">{{ __('messages.about.story_title') }}</h2>
                 <p style="color: #065f46; font-size: 16px; line-height: 1.8; margin-bottom: 20px;">
-                    {{ __('messages.about.story_desc', ['site' => App\Models\Setting::get('site_name', 'GreenHaven')]) }}
+                    {{ __('messages.about.story_desc', ['site' => App\Models\Setting::get('site_name', 'LongLeaf')]) }}
                 </p>
                 <p style="color: #065f46; font-size: 16px; line-height: 1.8; margin-bottom: 30px;">
-                    {{ __('messages.about.story_desc2', ['site' => App\Models\Setting::get('site_name', 'GreenHaven')]) }}
+                    {{ __('messages.about.story_desc2', ['site' => App\Models\Setting::get('site_name', 'LongLeaf')]) }}
                 </p>
                 <div style="display: flex; gap: 40px;">
                     <div>
@@ -116,7 +116,7 @@
     <div class="container">
         <div style="text-align: center; margin-bottom: 60px;">
             <h2 style="font-size: 36px; font-weight: 700; color: #064e3b;">{{ __('messages.about.team') }}</h2>
-            <p style="color: #065f46; margin-top: 16px;">{{ __('messages.about.team_sub', ['site' => App\Models\Setting::get('site_name', 'GreenHaven')]) }}</p>
+            <p style="color: #065f46; margin-top: 16px;">{{ __('messages.about.team_sub', ['site' => App\Models\Setting::get('site_name', 'LongLeaf')]) }}</p>
         </div>
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px;">
             <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.1); text-align: center;">

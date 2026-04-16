@@ -1,5 +1,5 @@
 /**
- * GreenHaven - Laravel Plant E-Commerce
+ * LongLeaf - Laravel Plant E-Commerce
  * Main JavaScript File
  */
 
@@ -221,7 +221,7 @@ function ajax(url, method = 'GET', data = null) {
 }
 
 // Export functions for global access
-window.GreenHaven = {
+window.LongLeaf = {
     showToast,
     ajax
 };

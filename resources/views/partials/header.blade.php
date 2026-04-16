@@ -3,7 +3,7 @@ use App\Models\Cart;
 use App\Models\Wishlist;
 use App\Models\Setting;
 
-$siteName = Setting::get('site_name', 'GreenHaven');
+$siteName = Setting::get('site_name', 'LongLeaf');
 $siteLogo = Setting::get('site_logo', '');
 $cartCount = auth()->check() ? Cart::where('user_id', auth()->id())->count() : 0;
 $wishlistCount = auth()->check() ? Wishlist::where('user_id', auth()->id())->count() : 0;

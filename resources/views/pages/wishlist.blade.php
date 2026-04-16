@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', __('messages.wishlist.title') . ' - GreenHaven')
+@section('title', __('messages.wishlist.title') . ' - LongLeaf')
 
 @section('content')
 <section class="page-banner">

@@ -21,7 +21,7 @@ class AiController extends Controller
 
         $locale   = app()->getLocale();
         $isEn     = $locale === 'en';
-        $siteName = \App\Models\Setting::get('site_name', 'GreenHaven');
+        $siteName = \App\Models\Setting::get('site_name', 'LongLeaf');
         $baseUrl  = url('/');
 
         // ── Build product catalog for context ────────────────────────────────

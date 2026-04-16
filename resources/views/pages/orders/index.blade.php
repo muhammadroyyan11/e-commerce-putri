@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', __('messages.orders.page_title') . ' - GreenHaven')
+@section('title', __('messages.orders.page_title') . ' - LongLeaf')
 
 @php
 $statusStyles = [

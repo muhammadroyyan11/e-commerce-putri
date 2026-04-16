@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('messages.auth.login_page_title') . ' - GreenHaven')
+@section('title', __('messages.auth.login_page_title') . ' - LongLeaf')
 
 @section('content')
 <section class="page-banner" style="padding: 60px 0;">

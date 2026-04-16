@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', __('messages.contact.title') . ' - ' . App\Models\Setting::get('site_name', 'GreenHaven'))
-@section('meta_description', 'Hubungi ' . App\Models\Setting::get('site_name', 'GreenHaven') . ' untuk pertanyaan, saran, atau bantuan. Tim kami siap membantu Anda.')
+@section('title', __('messages.contact.title') . ' - ' . App\Models\Setting::get('site_name', 'LongLeaf'))
+@section('meta_description', 'Hubungi ' . App\Models\Setting::get('site_name', 'LongLeaf') . ' untuk pertanyaan, saran, atau bantuan. Tim kami siap membantu Anda.')
 
 @section('content')
 <!-- Page Banner -->
@@ -55,7 +55,7 @@
                         </div>
                         <div>
                             <h4 style="font-size: 18px; font-weight: 600; color: #064e3b; margin-bottom: 4px;">{{ __('messages.contact.email') }}</h4>
-                            <p style="color: #065f46; line-height: 1.6;">hello@greenhaven.id<br>support@greenhaven.id</p>
+                            <p style="color: #065f46; line-height: 1.6;">hello@LongLeaf.id<br>support@LongLeaf.id</p>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('messages.cart.title') . ' - ' . App\Models\Setting::get('site_name', 'GreenHaven'))
+@section('title', __('messages.cart.title') . ' - ' . App\Models\Setting::get('site_name', 'LongLeaf'))
 
 @section('content')
 <!-- Page Banner -->

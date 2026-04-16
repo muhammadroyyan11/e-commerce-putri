@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $post['title'] . ' - ' . App\Models\Setting::get('site_name', 'GreenHaven'))
+@section('title', $post['title'] . ' - ' . App\Models\Setting::get('site_name', 'LongLeaf'))
 
 @section('content')
 <!-- Page Banner -->

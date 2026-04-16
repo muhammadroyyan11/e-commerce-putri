@@ -38,7 +38,7 @@ if [ ! -f "$WEBROOT/.env" ]; then
     cp $WEBROOT/.env.example $WEBROOT/.env
 
     # Edit nilai .env
-    sed -i "s|APP_NAME=Laravel|APP_NAME=GreenHaven|g" $WEBROOT/.env
+    sed -i "s|APP_NAME=Laravel|APP_NAME=LongLeaf|g" $WEBROOT/.env
     sed -i "s|APP_ENV=local|APP_ENV=production|g" $WEBROOT/.env
     sed -i "s|APP_DEBUG=true|APP_DEBUG=false|g" $WEBROOT/.env
     sed -i "s|APP_URL=http://localhost|APP_URL=https://$DOMAIN|g" $WEBROOT/.env

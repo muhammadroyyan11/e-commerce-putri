@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'GreenHaven - Toko Tanaman Online')
+@section('title', 'LongLeaf - Toko Tanaman Online')
 
 @section('content')
 <!-- Hero Section -->
@@ -223,7 +223,7 @@
     <div class="container">
         <div style="text-align: center; margin-bottom: 50px;">
             <span style="display: inline-block; background: white; color: var(--primary-dark); padding: 8px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; margin-bottom: 16px;">Keuntungan</span>
-            <h2 style="font-size: 36px; font-weight: 800; color: var(--text-dark);">Mengapa Memilih GreenHaven?</h2>
+            <h2 style="font-size: 36px; font-weight: 800; color: var(--text-dark);">Mengapa Memilih LongLeaf?</h2>
         </div>
         
         <div class="benefits-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;">
@@ -242,7 +242,7 @@
 <section class="newsletter-section">
     <div class="container">
         <div class="newsletter-content">
-            <h2>Bergabung dengan Komunitas GreenHaven</h2>
+            <h2>Bergabung dengan Komunitas LongLeaf</h2>
             <p>Dapatkan tips perawatan tanaman, promo eksklusif, dan update koleksi terbaru langsung di inbox Anda.</p>
             <form action="{{ route('newsletter.subscribe') }}" method="POST" class="newsletter-form-green">
                 @csrf

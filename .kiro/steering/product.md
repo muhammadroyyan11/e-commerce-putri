@@ -1,6 +1,6 @@
-# GreenHaven — Product Overview
+# LongLeaf — Product Overview
 
-GreenHaven is a bilingual (Indonesian/English) e-commerce platform for selling plants online. It is a Laravel-based monolith with two distinct areas:
+LongLeaf is a bilingual (Indonesian/English) e-commerce platform for selling plants online. It is a Laravel-based monolith with two distinct areas:
 
 - **Customer storefront** — browsing, cart, checkout, order tracking, blog, wishlist, Google login
 - **Admin panel** — full CRUD management for products, categories, orders, blog posts, users, payment methods, payment confirmations, newsletter subscribers, and site settings

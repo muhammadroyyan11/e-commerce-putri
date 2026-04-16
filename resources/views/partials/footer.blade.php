@@ -1,6 +1,6 @@
 @php
 use App\Models\Setting;
-$siteName = Setting::get('site_name', 'GreenHaven');
+$siteName = Setting::get('site_name', 'LongLeaf');
 @endphp
 
 <footer class="footer">
@@ -43,7 +43,7 @@ $siteName = Setting::get('site_name', 'GreenHaven');
                 <h4>{{ __('messages.footer.contact') }}</h4>
                 <p><i class="fas fa-map-marker-alt"></i> {{ __('messages.footer.address') }}</p>
                 <p><i class="fas fa-phone"></i> {{ __('messages.footer.phone') }}</p>
-                <p><i class="fas fa-envelope"></i> hello@greenhaven.id</p>
+                <p><i class="fas fa-envelope"></i> hello@LongLeaf.id</p>
                 <p><i class="fab fa-whatsapp"></i> {{ __('messages.footer.whatsapp') }}</p>
             </div>
         </div>

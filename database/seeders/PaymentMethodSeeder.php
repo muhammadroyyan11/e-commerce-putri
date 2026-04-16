@@ -17,7 +17,7 @@ class PaymentMethodSeeder extends Seeder
             [
                 'name'           => 'PayPal',
                 'type'           => 'manual',
-                'account_name'   => 'GreenHaven',
+                'account_name'   => 'LongLeaf',
                 'account_number' => '1234567890',
                 'logo'           => null,
                 'is_active'      => true,

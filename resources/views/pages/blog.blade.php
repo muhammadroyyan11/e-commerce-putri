@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', __('messages.blog.title', ['site' => App\Models\Setting::get('site_name', 'GreenHaven')]))
+@section('title', __('messages.blog.title', ['site' => App\Models\Setting::get('site_name', 'LongLeaf')]))
 
 @section('content')
 <!-- Page Banner -->
 <section class="page-banner">
     <div class="container">
-        <h1>{{ __('messages.blog.title', ['site' => App\Models\Setting::get('site_name', 'GreenHaven')]) }}</h1>
+        <h1>{{ __('messages.blog.title', ['site' => App\Models\Setting::get('site_name', 'LongLeaf')]) }}</h1>
         <nav class="breadcrumb">
             <a href="{{ route('home') }}">{{ __('messages.common.home') }}</a>
             <span>/</span>

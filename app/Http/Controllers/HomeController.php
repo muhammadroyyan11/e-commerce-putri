@@ -61,7 +61,7 @@ class HomeController extends Controller
     {
         return [
             ['name' => 'Sarah Amelia', 'location' => 'Jakarta', 'avatar' => 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop', 'comment' => '"Pelayanan sangat bagus! Tanaman sampai dalam kondisi sempurna."', 'rating' => 5],
-            ['name' => 'Budi Santoso', 'location' => 'Bandung', 'avatar' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop', 'comment' => '"GreenHaven adalah toko tanaman online terbaik yang pernah saya coba."', 'rating' => 5],
+            ['name' => 'Budi Santoso', 'location' => 'Bandung', 'avatar' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop', 'comment' => '"LongLeaf adalah toko tanaman online terbaik yang pernah saya coba."', 'rating' => 5],
             ['name' => 'Dewi Lestari', 'location' => 'Surabaya', 'avatar' => 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop', 'comment' => '"Koleksi tanaman langkanya lengkap! Harga juga bersaing."', 'rating' => 5],
         ];
     }

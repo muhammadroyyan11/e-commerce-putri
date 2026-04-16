@@ -65,7 +65,7 @@ class BlogController extends Controller
             'content' => $post->content,
             'category' => $post->category ?: 'Uncategorized',
             'category_slug' => $post->category_slug ?: 'uncategorized',
-            'author' => $post->author ?: 'GreenHaven Team',
+            'author' => $post->author ?: 'LongLeaf Team',
             'author_avatar' => $post->author_avatar ?: 'https://www.gravatar.com/avatar/?d=mp&s=100',
             'date' => optional($post->published_at ?: $post->created_at)->format('d M Y'),
             'views' => number_format((int) $post->views),

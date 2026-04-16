@@ -1,66 +1,223 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# GreenHaven / LongLeaf — Feature Documentation
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Tech Stack
+- **Framework**: Laravel 10
+- **Database**: MySQL / MariaDB
+- **Payment**: Midtrans Core API
+- **Shipping**: RajaOngkir Komerce (domestic) + Shippo (international)
+- **Currency**: Frankfurter.app (real-time exchange rates)
+- **Auth**: Laravel Sanctum + Google OAuth (Socialite)
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 1. Authentication
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Feature | Detail |
+|---------|--------|
+| Register / Login | Email & password |
+| Google OAuth | Login dengan akun Google |
+| Admin login | `/admin/login` — terpisah dari customer |
+| Middleware | `auth` untuk customer, `admin` untuk admin panel |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 2. Admin Panel (`/admin`)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Katalog
+- **Kategori** — CRUD kategori produk
+- **Produk** — CRUD produk (nama, harga, stok, berat gram, gambar, badge, dll)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Penjualan
+- **Pesanan** — lihat & update status order
+- **Konfirmasi Pembayaran** — approve/reject bukti transfer manual
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Konten
+- **Blog / Artikel** — CRUD artikel dengan rich text editor
+- **Newsletter** — lihat & hapus subscriber
 
-## Laravel Sponsors
+### Pembayaran
+- **Metode Pembayaran** — CRUD (manual transfer / Midtrans), upload logo
+- **Coupon / Voucher** — CRUD coupon 5 digit, masa aktif, tipe persen/fixed
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Konfigurasi
+- **API Settings** — toggle ON/OFF + isi key untuk:
+  - Midtrans (server key, client key, mode production/sandbox)
+  - RajaOngkir Komerce (API key, ID kota asal)
+  - Shippo (API token, kode pos asal, negara asal)
+- **Zona Pengiriman** — kelola flat rate per zona internasional
+- **Pengaturan** — nama toko, logo, dll
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## 3. Shop (Customer)
 
-## Contributing
+### Halaman Toko (`/shop`)
+- Filter produk by kategori
+- Sort: Featured, Newest, Price Low-High, Price High-Low
+- **Search produk** — via toolbar & navbar search
+- Wishlist toggle (heart button)
+- Responsive: 2 kolom di mobile
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Detail Produk (`/shop/{slug}`)
+- Gambar, deskripsi, harga, stok
+- Tombol Add to Cart
+- Related products
 
-## Code of Conduct
+### Wishlist (`/wishlist`)
+- Daftar produk yang di-wishlist
+- Hapus dari wishlist tanpa reload
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 4. Cart & Checkout
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Cart (`/cart`)
+- Tambah, update qty, hapus item
+- Hitung subtotal otomatis
 
-## License
+### Checkout (`/checkout`)
+- Form alamat pengiriman internasional (nama, alamat, kota, state/province, negara, kode pos, telepon)
+- **Dropdown negara** — Select2 + REST Countries API (~250 negara)
+- **Ongkir dinamis**:
+  - Indonesia → pilih kota → RajaOngkir (JNE, TIKI, POS, SiCepat, J&T)
+  - Internasional → Shippo (DHL, FedEx, dll) atau flat rate zona
+- **Coupon/Voucher** — input kode, validasi AJAX, diskon langsung terlihat
+- **Multi-currency** — total tampil dalam mata uang yang dipilih
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## 5. Pembayaran
+
+### Manual Transfer
+- Customer pilih metode manual (PayPal, BCA, dll)
+- Upload bukti bayar
+- Admin approve/reject di panel konfirmasi pembayaran
+
+### Midtrans (Online Payment)
+- Customer pilih "Bayar Online"
+- **Halaman pilih metode** (`/payment/{order}/select`):
+  - Transfer Bank VA: BCA, BNI, BRI, Mandiri, Permata
+  - E-Wallet: GoPay, QRIS, ShopeePay
+  - Minimarket: Alfamart, Indomaret
+- **Halaman detail pembayaran** (`/payment/{order}/detail`):
+  - Tampil nomor VA / QR code / kode bayar
+  - Tombol salin VA
+  - Tombol download QR (via server proxy)
+  - Countdown expired
+  - Auto-refresh status setiap 15 detik
+- **Webhook** — status order otomatis update saat pembayaran berhasil
+
+---
+
+## 6. Order Management (Customer)
+
+### Riwayat Pesanan (`/account/orders`)
+- List semua order compact (nomor, tanggal, status, total, item)
+- Filter by status
+- Tombol aksi per order:
+  - **Detail** — lihat detail order
+  - **Bayar Sekarang** — ke halaman pembayaran (jika pending)
+  - **Ganti Metode Pembayaran** — reset & pilih ulang
+  - **Batalkan Pesanan** — dengan wajib isi alasan
+
+### Detail Order (`/account/orders/{id}`)
+- Info produk, alamat, ongkir, total
+- Status pembayaran (VA/QR/konfirmasi manual)
+- Tombol cancel & ganti payment
+- Tampil alasan pembatalan jika dibatalkan
+
+---
+
+## 7. Shipping
+
+### Domestik (Indonesia) — RajaOngkir Komerce
+- Endpoint: `https://rajaongkir.komerce.id/api/v1`
+- Pilih kota tujuan (dropdown Select2, ~500+ kota)
+- Kurir: JNE, TIKI, POS, SiCepat, J&T
+- Harga real-time
+- Kota di-cache 24 jam
+
+### Internasional — Shippo
+- Endpoint: `https://api.goshippo.com`
+- Harga real-time dari carrier (DHL, FedEx, UPS, dll)
+- Fallback ke flat rate zona jika Shippo OFF atau tidak ada rates
+
+### Zona Pengiriman (Flat Rate Fallback)
+| Zona | Contoh Negara | Default Rate |
+|------|--------------|-------------|
+| Indonesia | Indonesia | Rp 25.000 |
+| SEA | Malaysia, Singapore, Thailand | Rp 150.000 |
+| Asia Timur | Japan, Korea, China | Rp 250.000 |
+| Asia Selatan | India, Pakistan | Rp 280.000 |
+| Timur Tengah | UAE, Saudi Arabia | Rp 300.000 |
+| Australia & Pasifik | Australia, NZ | Rp 320.000 |
+| Eropa Barat | UK, Germany, France | Rp 400.000 |
+| Eropa Timur | Poland, Russia | Rp 420.000 |
+| Amerika Utara | US, Canada, Mexico | Rp 450.000 |
+| Amerika Selatan | Brazil, Argentina | Rp 500.000 |
+| Afrika | South Africa, Nigeria | Rp 550.000 |
+
+---
+
+## 8. Coupon / Voucher
+
+- Kode **5 karakter** (huruf kapital + angka)
+- Tipe: **Persen** (%) atau **Fixed** (Rp)
+- Masa aktif: tanggal mulai & berakhir
+- Minimum order
+- Maksimum diskon (opsional)
+- Batas pemakaian (opsional)
+- Validasi AJAX di checkout (real-time)
+
+---
+
+## 9. Multi-Currency
+
+- Mata uang: IDR, USD, EUR, SGD, MYR, GBP, AUD, JPY
+- Switcher di header (dropdown)
+- Kurs dari **Frankfurter.app** (gratis, tanpa API key)
+- Cache kurs **1 jam**
+- Berlaku di: shop, product detail, checkout summary
+
+---
+
+## 10. Internasionalisasi (i18n)
+
+- Bahasa: **Indonesia (ID)** dan **English (EN)**
+- Switcher di header
+- File lang: `resources/lang/id/messages.php` & `resources/lang/en/messages.php`
+
+---
+
+## 11. Blog
+
+- List artikel (`/blog`)
+- Detail artikel (`/blog/{slug}`)
+- CRUD di admin panel dengan rich text editor (Quill)
+- Upload gambar artikel
+
+---
+
+## 12. Lainnya
+
+- **Newsletter** — subscribe email dari homepage
+- **Google Analytics** ready (tambah tracking ID di settings)
+- **Responsive** — mobile-friendly (2 kolom grid di HP)
+- **SEO** — meta title & description per halaman
+
+---
+
+## Deployment
+
+- Server: CyberPanel + OpenLiteSpeed
+- Domain: `putri.ypac.site`
+- Branch: `feature/midtrans-payment`
+- Deploy: `git pull && composer install --no-dev && php artisan migrate --force && php artisan config:cache`
+
+---
+
+## Default Credentials
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@greenhaven.id | password |

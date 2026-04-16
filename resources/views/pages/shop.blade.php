@@ -136,12 +136,12 @@
                             <h3 class="plant-name"><a href="{{ route('product.detail', $product['slug']) }}">{{ $product['name'] }}</a></h3>
                             <div class="plant-specs">
                                 <span><i class="fas fa-ruler-vertical"></i> {{ $product['height'] }}</span>
-                                <span><i class="fas fa-sun"></i> {{ $product['light'] }}</span>
+                                <span><i class="fas fa-sun"></i> {{ pval($product['light']) }}</span>
                             </div>
                             <div class="care-icons">
-                                <div class="care-icon" data-tooltip="{{ __('messages.shop.watering') }} {{ $product['watering'] }}">💧</div>
-                                <div class="care-icon" data-tooltip="{{ __('messages.shop.light') }} {{ $product['light'] }}">🌤</div>
-                                <div class="care-icon" data-tooltip="{{ $product['care_level'] }}">✨</div>
+                                <div class="care-icon" data-tooltip="{{ __('messages.shop.watering') }}: {{ pval($product['watering']) }}">💧</div>
+                                <div class="care-icon" data-tooltip="{{ __('messages.shop.light') }}: {{ pval($product['light']) }}">🌤</div>
+                                <div class="care-icon" data-tooltip="{{ pval($product['care_level']) }}">✨</div>
                             </div>
                             <div class="plant-price">
                                 <span class="current">{{ $currency->format($product['price'], $currentCurrency) }}</span>

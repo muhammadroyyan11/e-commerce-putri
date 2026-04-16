@@ -9,6 +9,8 @@ use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\PaymentConfirmationController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CustomerAuthController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\AiController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -96,7 +98,17 @@ Route::middleware('auth')->group(function () {
     // Payment Confirmation Routes
     Route::get('/orders/{order}/payment-confirmation', [PaymentConfirmationController::class, 'create'])->name('payment-confirmation.create');
     Route::post('/orders/{order}/payment-confirmation', [PaymentConfirmationController::class, 'store'])->name('payment-confirmation.store');
+
+    // Review Routes
+    Route::post('/orders/{order}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+
+    // AI Routes (auth required to prevent abuse)
+    Route::post('/ai/chat', [AiController::class, 'chat'])->name('ai.chat');
 });
+
+// AI chat also available for guests (read-only product page)
+Route::post('/ai/chat/guest', [AiController::class, 'chat'])->name('ai.chat.guest')
+    ->middleware('throttle:20,1'); // 20 req/menit per IP
 
 // Blog Routes
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
@@ -179,5 +191,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
-    });
+
+        // AI - Generate product description
+        Route::post('/ai/generate-description', [\App\Http\Controllers\AiController::class, 'generateDescription'])->name('ai.generate-description');    });
 });

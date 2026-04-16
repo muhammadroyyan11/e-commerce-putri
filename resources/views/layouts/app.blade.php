@@ -32,6 +32,11 @@
     
     <!-- Footer -->
     @include('partials.footer')
+
+    @include('partials.ai-chat-bubble', [
+        'productId'   => $aiProductId   ?? null,
+        'productName' => $aiProductName ?? null,
+    ])
     
     <!-- Toast Notification -->
     <div id="toast" class="toast-notification" style="display: none;">

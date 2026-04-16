@@ -25,4 +25,20 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('sort_order');
+    }
+
+    public function primaryImage(): ?ProductImage
+    {
+        return $this->images->firstWhere('is_primary', true)
+            ?? $this->images->first();
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(ProductReview::class);
+    }
 }

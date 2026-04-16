@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Admin') | GreenHaven</title>
+    <title>@yield('title', 'Admin') | {{ App\Models\Setting::get('site_name', 'GreenHaven') }}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -38,7 +38,8 @@
         <!-- Sidebar -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <a href="{{ route('admin.dashboard') }}" class="brand-link">
-                <span class="brand-text font-weight-light ml-3"><b>Green</b>Haven Admin</span>
+                @php $siteName = App\Models\Setting::get('site_name', 'GreenHaven'); @endphp
+                <span class="brand-text font-weight-light ml-3"><b>{{ Str::before($siteName, ' ') ?: $siteName }}</b>{{ Str::after($siteName, ' ') ? ' ' . Str::after($siteName, ' ') : '' }} Admin</span>
             </a>
             <div class="sidebar">
                 <nav class="mt-2">
@@ -168,7 +169,7 @@
         </div>
 
         <footer class="main-footer">
-            <strong>&copy; {{ date('Y') }} GreenHaven.</strong> All rights reserved.
+            <strong>&copy; {{ date('Y') }} {{ App\Models\Setting::get('site_name', 'GreenHaven') }}.</strong> All rights reserved.
         </footer>
     </div>
 

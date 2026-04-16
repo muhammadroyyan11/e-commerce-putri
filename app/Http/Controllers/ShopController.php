@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductReview;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 
@@ -43,14 +44,14 @@ class ShopController extends Controller
 
     public function show($slug)
     {
-        $product = Product::with('category')->where('slug', $slug)->where('is_active', true)->first();
+        $product = Product::with(['category', 'images'])->where('slug', $slug)->where('is_active', true)->first();
 
         if (!$product) {
             abort(404);
         }
 
         $mappedProduct = $this->mapProduct($product);
-        $relatedProducts = Product::where('category_id', $product->category_id)
+        $relatedProducts = Product::with('images')->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->where('is_active', true)
             ->take(4)
@@ -61,10 +62,16 @@ class ShopController extends Controller
         $inWishlist = auth()->check() ? Wishlist::where('user_id', auth()->id())->where('product_id', $product->id)->exists() : false;
 
         return view('pages.product-detail', [
-            'product' => $mappedProduct,
+            'product'         => $mappedProduct,
+            'productImages'   => $product->images,
             'relatedProducts' => $relatedProducts,
-            'reviews' => $reviews,
-            'inWishlist' => $inWishlist,
+            'reviews'         => $reviews,
+            'avgRating'       => $reviews->avg('rating') ?? 0,
+            'reviewCount'     => $reviews->count(),
+            'inWishlist'      => $inWishlist,
+        ])->with([
+            'aiProductId'   => $product->id,
+            'aiProductName' => $product->name,
         ]);
     }
 
@@ -166,22 +173,31 @@ class ShopController extends Controller
 
     private function mapProduct(Product $product)
     {
+        $primaryImage = $product->relationLoaded('images')
+            ? $product->primaryImage()
+            : null;
+
+        $imageUrl = $primaryImage?->url
+            ?? $product->image
+            ?? 'https://via.placeholder.com/400x500';
+
         return [
-            'id' => $product->id,
-            'name' => $product->name,
-            'slug' => $product->slug,
-            'category' => $product->category?->name ?? 'Tanaman',
-            'category_slug' => $product->category?->slug ?? '',
-            'price' => $product->price,
+            'id'             => $product->id,
+            'name'           => $product->name,
+            'slug'           => $product->slug,
+            'category'       => $product->category?->name ?? 'Tanaman',
+            'category_slug'  => $product->category?->slug ?? '',
+            'price'          => $product->price,
             'original_price' => $product->original_price,
-            'discount' => $product->discount,
-            'image' => $product->image ?? 'https://via.placeholder.com/400x500',
-            'height' => $product->height,
-            'light' => $product->light,
-            'care_level' => $product->care_level,
-            'watering' => $product->watering,
-            'badge' => $product->badge,
-            'stock' => $product->stock,
+            'discount'       => $product->discount,
+            'image'          => $imageUrl,
+            'description'    => $product->description,
+            'height'         => $product->height,
+            'light'          => $product->light,
+            'care_level'     => $product->care_level,
+            'watering'       => $product->watering,
+            'badge'          => $product->badge,
+            'stock'          => $product->stock,
         ];
     }
 
@@ -198,9 +214,17 @@ class ShopController extends Controller
 
     private function getProductReviews($productId)
     {
-        return [
-            ['name' => 'Sarah Amelia', 'avatar' => 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop', 'rating' => 5, 'date' => '15 Jan 2026', 'comment' => 'Tanaman sampai dengan selamat!', 'verified' => true],
-            ['name' => 'Michael Chen', 'avatar' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop', 'rating' => 4, 'date' => '12 Jan 2026', 'comment' => 'Kualitas bagus, pengiriman cepat.', 'verified' => true],
-        ];
+        return ProductReview::with('user')
+            ->where('product_id', $productId)
+            ->latest()
+            ->get()
+            ->map(fn($r) => [
+                'name'    => $r->user->name,
+                'avatar'  => null,
+                'rating'  => $r->rating,
+                'date'    => $r->created_at->format('d M Y'),
+                'comment' => $r->comment,
+                'verified' => true,
+            ]);
     }
 }

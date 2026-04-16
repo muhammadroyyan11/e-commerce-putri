@@ -62,6 +62,91 @@
                         <div>{{ $order->address }}, {{ $order->city }}, {{ $order->province }}, {{ $order->postal_code }}</div>
                     </div>
                 </div>
+
+                {{-- Review Form — only for completed orders --}}
+                @if($order->status === 'completed')
+                <div style="background: white; border-radius: 28px; padding: 24px; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06);">
+                    <h3 style="margin-bottom: 6px;">⭐ {{ __('messages.review.title') }}</h3>
+                    <p style="font-size:14px; color:#64748b; margin-bottom:20px;">{{ __('messages.review.subtitle') }}</p>
+
+                    @if(session('success'))
+                        <div style="background:#dcfce7; color:#166534; padding:12px 16px; border-radius:12px; margin-bottom:16px; font-size:14px; font-weight:600;">
+                            <i class="fas fa-check-circle" style="margin-right:6px;"></i>{{ session('success') }}
+                        </div>
+                    @endif
+                    @if(session('error'))
+                        <div style="background:#fee2e2; color:#991b1b; padding:12px 16px; border-radius:12px; margin-bottom:16px; font-size:14px; font-weight:600;">
+                            <i class="fas fa-exclamation-circle" style="margin-right:6px;"></i>{{ session('error') }}
+                        </div>
+                    @endif
+
+                    @php
+                        $reviewedProductIds = \App\Models\ProductReview::where('order_id', $order->id)
+                            ->where('user_id', auth()->id())
+                            ->pluck('product_id')
+                            ->toArray();
+                        $reviewableItems = $order->items->filter(function($item) use ($reviewedProductIds) {
+                            $product = \App\Models\Product::where('name', $item->product_name)->first();
+                            return $product && !in_array($product->id, $reviewedProductIds);
+                        });
+                    @endphp
+
+                    @if($reviewableItems->isEmpty())
+                        <div style="text-align:center; padding:20px; color:#64748b; font-size:14px;">
+                            <i class="fas fa-check-circle" style="font-size:28px; color:#16a34a; display:block; margin-bottom:8px;"></i>
+                            {{ __('messages.review.all_reviewed') }}
+                        </div>
+                    @else
+                        <form action="{{ route('reviews.store', $order) }}" method="POST" id="reviewForm">
+                            @csrf
+
+                            {{-- Product selector --}}
+                            <div style="margin-bottom:16px;">
+                                <label style="font-size:13px; font-weight:600; color:#374151; display:block; margin-bottom:8px;">{{ __('messages.review.select_product') }}</label>
+                                <select name="product_id" required
+                                    style="width:100%; padding:12px 14px; border:1.5px solid #e2e8f0; border-radius:12px; font-size:14px; background:white; color:#0f172a;">
+                                    <option value="">{{ __('messages.review.select_product_placeholder') }}</option>
+                                    @foreach($reviewableItems as $item)
+                                        @php $p = \App\Models\Product::where('name', $item->product_name)->first(); @endphp
+                                        @if($p)
+                                            <option value="{{ $p->id }}">{{ $item->product_name }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            {{-- Star rating --}}
+                            <div style="margin-bottom:16px;">
+                                <label style="font-size:13px; font-weight:600; color:#374151; display:block; margin-bottom:8px;">{{ __('messages.review.rating') }}</label>
+                                <div class="star-picker" style="display:flex; gap:6px;">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <button type="button" class="star-btn" data-value="{{ $i }}"
+                                            style="font-size:28px; background:none; border:none; cursor:pointer; color:#d1d5db; transition:color .15s; padding:0;">
+                                            ★
+                                        </button>
+                                    @endfor
+                                </div>
+                                <input type="hidden" name="rating" id="ratingInput" required>
+                            </div>
+
+                            {{-- Comment --}}
+                            <div style="margin-bottom:20px;">
+                                <label style="font-size:13px; font-weight:600; color:#374151; display:block; margin-bottom:8px;">
+                                    {{ __('messages.review.comment') }} <span style="color:#94a3b8;">({{ __('messages.review.comment_optional') }})</span>
+                                </label>
+                                <textarea name="comment" rows="3" placeholder="{{ __('messages.review.comment_placeholder') }}"
+                                    style="width:100%; padding:12px 14px; border:1.5px solid #e2e8f0; border-radius:12px; font-size:14px; resize:vertical; font-family:inherit;"></textarea>
+                            </div>
+
+                            <button type="submit"
+                                style="width:100%; padding:14px; background:var(--gradient-primary); color:white; border:none; border-radius:12px; font-weight:700; font-size:15px; cursor:pointer;">
+                                <i class="fas fa-paper-plane" style="margin-right:8px;"></i>{{ __('messages.review.submit') }}
+                            </button>
+                        </form>
+                    @endif
+                </div>
+                @endif
+
             </div>
 
             <aside style="display: grid; gap: 20px; align-self: start;">
@@ -119,15 +204,15 @@
                         @endif
                         @if($order->payment_expired_at)
                         <p style="font-size:13px; color:#b45309; text-align:center; margin-bottom:16px;">
-                            <i class="fas fa-clock mr-1"></i> Bayar sebelum {{ $order->payment_expired_at->format('d M Y, H:i') }}
+                            <i class="fas fa-clock mr-1"></i> {{ __('messages.payment.pay_before', ['date' => $order->payment_expired_at->format('d M Y, H:i')]) }}
                         </p>
                         @endif
                         <a href="{{ route('payment.detail', $order) }}" style="display:block; text-align:center; padding:14px; background:#16a34a; color:white; border-radius:12px; font-weight:700; text-decoration:none;">
-                            <i class="fas fa-wallet mr-1"></i> Lihat Detail Pembayaran
+                            <i class="fas fa-wallet mr-1"></i> {{ __('messages.payment.view_detail') }}
                         </a>
                     @elseif($order->status === 'pending' && $order->paymentMethod?->isMidtrans() && !$order->payment_type)
                         <a href="{{ route('payment.select', $order) }}" style="display:block; text-align:center; padding:14px; background:#16a34a; color:white; border-radius:12px; font-weight:700; text-decoration:none;">
-                            <i class="fas fa-wallet mr-1"></i> Pilih Metode Pembayaran
+                            <i class="fas fa-wallet mr-1"></i> {{ __('messages.payment.select_method') }}
                         </a>
                     @elseif($order->paymentConfirmation)
                         <div style="display: grid; gap: 10px; color: #475569;">
@@ -203,5 +288,22 @@ function showCancelModal() {
 function hideCancelModal() {
     document.getElementById('cancel-modal').style.display = 'none';
 }
+
+// Star picker
+document.querySelectorAll('.star-btn').forEach((btn, idx, all) => {
+    btn.addEventListener('click', () => {
+        const val = parseInt(btn.dataset.value);
+        document.getElementById('ratingInput').value = val;
+        all.forEach((b, i) => { b.style.color = i < val ? '#f59e0b' : '#d1d5db'; });
+    });
+    btn.addEventListener('mouseenter', () => {
+        const val = parseInt(btn.dataset.value);
+        all.forEach((b, i) => { b.style.color = i < val ? '#f59e0b' : '#d1d5db'; });
+    });
+    btn.addEventListener('mouseleave', () => {
+        const current = parseInt(document.getElementById('ratingInput')?.value || 0);
+        all.forEach((b, i) => { b.style.color = i < current ? '#f59e0b' : '#d1d5db'; });
+    });
+});
 </script>
 @endpush

@@ -1746,6 +1746,12 @@ input, textarea, select {
     .cg-grid-3 { grid-template-columns: repeat(2, 1fr); gap: 16px; }
     .cg-grid-2 { grid-template-columns: 1fr; gap: 16px; }
     .cg-grid-2col { grid-template-columns: 1fr; gap: 24px; }
+
+    .cg-grid-4 > div,
+    .cg-grid-3 > div,
+    .cg-grid-2 > div {
+        padding: 16px !important;
+    }
 }
 
 @media (max-width: 480px) {

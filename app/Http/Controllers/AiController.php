@@ -19,29 +19,61 @@ class AiController extends Controller
             'product_id' => 'nullable|integer|exists:products,id',
         ]);
 
-        $locale  = app()->getLocale();
-        $isEn    = $locale === 'en';
+        $locale   = app()->getLocale();
+        $isEn     = $locale === 'en';
         $siteName = \App\Models\Setting::get('site_name', 'GreenHaven');
+        $baseUrl  = url('/');
 
-        $product = $request->filled('product_id')
+        // ── Build product catalog for context ────────────────────────────────
+        $catalog = Product::with('category')
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get(['id', 'name', 'slug', 'category_id', 'care_level', 'watering', 'light', 'price', 'stock']);
+
+        $catalogLines = $catalog->map(function ($p) use ($baseUrl) {
+            $url      = $baseUrl . '/shop/' . $p->slug;
+            $category = $p->category?->name ?? '';
+            $price    = 'Rp' . number_format($p->price, 0, ',', '.');
+            $stock    = $p->stock > 0 ? 'tersedia' : 'habis';
+            return "- {$p->name} | {$category} | Perawatan: {$p->care_level} | Cahaya: {$p->light} | Penyiraman: {$p->watering} | Harga: {$price} | Stok: {$stock} | URL: {$url}";
+        })->implode("\n");
+
+        // ── Current product context (if on product page) ─────────────────────
+        $currentProduct = $request->filled('product_id')
             ? Product::with('category')->find($request->product_id)
             : null;
 
+        // ── System prompt ─────────────────────────────────────────────────────
         $systemPrompt = $isEn
-            ? "You are a friendly plant care expert assistant for {$siteName}, an online plant shop. Answer questions about plant care, watering, lighting, and general plant advice. Keep answers concise (2-4 sentences). Be warm and helpful. Do not answer questions unrelated to plants or gardening."
-            : "Kamu adalah asisten ahli perawatan tanaman yang ramah untuk {$siteName}, toko tanaman online. Jawab pertanyaan tentang perawatan tanaman, penyiraman, pencahayaan, dan saran tanaman. Jawaban singkat dan padat (2-4 kalimat). Gunakan bahasa Indonesia yang santai. Jangan jawab pertanyaan di luar topik tanaman.";
+            ? "You are JEZY, a friendly plant care expert assistant for {$siteName}, an online plant shop. Your name is JEZY.\n"
+              . "Answer questions about plant care, watering, lighting, and plant recommendations.\n"
+              . "IMPORTANT: When recommending plants, ONLY recommend plants from the catalog below. Always include the product URL as a clickable markdown link like [Plant Name](URL). If a plant is out of stock, mention it.\n"
+              . "Keep answers concise and warm. Do not answer questions unrelated to plants.\n\n"
+              . "=== AVAILABLE PRODUCTS ===\n{$catalogLines}"
+            : "Kamu adalah JEZY, asisten ahli perawatan tanaman yang ramah untuk {$siteName}, toko tanaman online. Namamu adalah JEZY.\n"
+              . "Jawab pertanyaan tentang perawatan tanaman, penyiraman, pencahayaan, dan rekomendasi tanaman.\n"
+              . "PENTING: Saat merekomendasikan tanaman, HANYA rekomendasikan tanaman dari katalog di bawah ini. Selalu sertakan URL produk sebagai link markdown seperti [Nama Tanaman](URL). Jika stok habis, sebutkan.\n"
+              . "Jawaban singkat, padat, dan ramah. Jangan jawab pertanyaan di luar topik tanaman.\n\n"
+              . "=== PRODUK TERSEDIA ===\n{$catalogLines}";
 
-        if ($product) {
+        if ($currentProduct) {
             $context = $isEn
-                ? "\n\nCurrent product: {$product->name} ({$product->category?->name}). Care level: {$product->care_level}. Watering: {$product->watering}. Light: {$product->light}. Height: {$product->height}."
-                : "\n\nProduk saat ini: {$product->name} ({$product->category?->name}). Perawatan: {$product->care_level}. Penyiraman: {$product->watering}. Cahaya: {$product->light}. Tinggi: {$product->height}.";
+                ? "\n\n=== CURRENT PAGE PRODUCT ===\n{$currentProduct->name} ({$currentProduct->category?->name}). Care: {$currentProduct->care_level}. Watering: {$currentProduct->watering}. Light: {$currentProduct->light}. Height: {$currentProduct->height}."
+                : "\n\n=== PRODUK HALAMAN INI ===\n{$currentProduct->name} ({$currentProduct->category?->name}). Perawatan: {$currentProduct->care_level}. Penyiraman: {$currentProduct->watering}. Cahaya: {$currentProduct->light}. Tinggi: {$currentProduct->height}.";
             $systemPrompt .= $context;
         }
 
         $reply = $this->groq->chat([
             ['role' => 'system', 'content' => $systemPrompt],
             ['role' => 'user',   'content' => $request->message],
-        ], 512);
+        ], 768);
+
+        // Convert markdown links [text](url) → HTML <a> tags for display
+        $reply = preg_replace(
+            '/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/',
+            '<a href="$2" style="color:#16a34a;font-weight:600;text-decoration:underline;" target="_self">$1</a>',
+            $reply
+        );
 
         return response()->json(['reply' => $reply]);
     }

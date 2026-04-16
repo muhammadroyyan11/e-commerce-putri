@@ -7,11 +7,11 @@
 
     $greeting = $productName
         ? ($isId
-            ? "Halo! Saya Plant Expert AI <strong>{$siteName}</strong>. Tanya apa saja tentang <strong>{$productName}</strong> — perawatan, penyiraman, pencahayaan, dan lainnya 🌱"
-            : "Hi! I'm <strong>{$siteName}</strong>'s Plant Expert AI. Ask me anything about <strong>{$productName}</strong> — care, watering, lighting, and more 🌱")
+            ? "Halo! Saya <strong>JEZY</strong>, asisten tanaman {$siteName}. Tanya apa saja tentang <strong>{$productName}</strong> — perawatan, penyiraman, pencahayaan, dan lainnya 🌱"
+            : "Hi! I'm <strong>JEZY</strong>, {$siteName}'s plant assistant. Ask me anything about <strong>{$productName}</strong> — care, watering, lighting, and more 🌱")
         : ($isId
-            ? "Halo! Saya Plant Expert AI <strong>{$siteName}</strong>. Ada yang bisa saya bantu tentang tanaman? 🌿"
-            : "Hi! I'm <strong>{$siteName}</strong>'s Plant Expert AI. How can I help you with plants today? 🌿");
+            ? "Halo! Saya <strong>JEZY</strong>, asisten tanaman {$siteName}. Ada yang bisa saya bantu tentang tanaman? 🌿"
+            : "Hi! I'm <strong>JEZY</strong>, {$siteName}'s plant assistant. How can I help you with plants today? 🌿");
 
     $quickQuestions = $productName
         ? ($isId
@@ -78,10 +78,10 @@
     <div style="background:linear-gradient(135deg,#22c55e,#16a34a); padding:16px 18px; display:flex; align-items:center; gap:12px;">
         <div style="width:38px; height:38px; background:rgba(255,255,255,.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">🌿</div>
         <div style="flex:1; min-width:0;">
-            <div style="color:white; font-weight:700; font-size:15px;">Plant Expert AI</div>
+            <div style="color:white; font-weight:700; font-size:15px;">JEZY</div>
             <div style="color:rgba(255,255,255,.8); font-size:12px; display:flex; align-items:center; gap:5px;">
                 <span style="width:7px; height:7px; background:#86efac; border-radius:50%; display:inline-block;"></span>
-                {{ $isId ? 'Online · Powered by Groq' : 'Online · Powered by Groq' }}
+                {{ $isId ? 'Online' : 'Online' }}
             </div>
         </div>
         <button onclick="toggleAiChat()" style="background:rgba(255,255,255,.15); border:none; color:white; width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center;">✕</button>

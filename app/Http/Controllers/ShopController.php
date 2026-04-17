@@ -12,13 +12,11 @@ class ShopController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with('category')->where('is_active', true);
+        $query = Product::with(['category', 'images'])->where('is_active', true);
 
-        if ($request->has('category')) {
+        if ($request->filled('category')) {
             $category = Category::where('slug', $request->category)->first();
-            if ($category) {
-                $query->where('category_id', $category->id);
-            }
+            if ($category) $query->where('category_id', $category->id);
         }
 
         if ($request->filled('search')) {
@@ -26,20 +24,42 @@ class ShopController extends Controller
         }
 
         $sort = $request->get('sort', 'featured');
-        if ($sort === 'price-low') {
-            $query->orderBy('price', 'asc');
-        } elseif ($sort === 'price-high') {
-            $query->orderBy('price', 'desc');
-        } else {
-            $query->latest();
+        match ($sort) {
+            'price-low'  => $query->orderBy('price', 'asc'),
+            'price-high' => $query->orderBy('price', 'desc'),
+            default      => $query->latest(),
+        };
+
+        $perPage     = 9;
+        $paginated   = $query->paginate($perPage)->withQueryString();
+        $products    = $paginated->getCollection()->map(fn($p) => $this->mapProduct($p));
+        $wishlistIds = auth()->check() ? Wishlist::where('user_id', auth()->id())->pluck('product_id')->toArray() : [];
+
+        // AJAX infinite scroll — return JSON with rendered HTML
+        if ($request->ajax() || $request->wantsJson()) {
+            $html = '';
+            foreach ($products as $product) {
+                $html .= view('partials.product-card', compact('product', 'wishlistIds'))->render();
+            }
+            return response()->json([
+                'html'     => $html,
+                'has_more' => $paginated->hasMorePages(),
+                'next_page'=> $paginated->currentPage() + 1,
+                'total'    => $paginated->total(),
+            ]);
         }
 
-        $products = $query->get()->map(fn($p) => $this->mapProduct($p));
         $categories = $this->getCategories();
-        $wishlistIds = auth()->check() ? Wishlist::where('user_id', auth()->id())->pluck('product_id')->toArray() : [];
-        $search = $request->get('search', '');
+        $search     = $request->get('search', '');
 
-        return view('pages.shop', compact('products', 'categories', 'sort', 'wishlistIds', 'search'));
+        return view('pages.shop', [
+            'products'    => $products,
+            'paginated'   => $paginated,
+            'categories'  => $categories,
+            'sort'        => $sort,
+            'wishlistIds' => $wishlistIds,
+            'search'      => $search,
+        ]);
     }
 
     public function show($slug)

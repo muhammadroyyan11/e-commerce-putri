@@ -21,15 +21,15 @@
                 <div class="hero-stats" style="display: flex; gap: 40px; margin-top: 48px;">
                     <div>
                         <span style="font-size: 32px; font-weight: 800; color: #84cc16;">500+</span>
-                        <p style="font-size: 14px; opacity: 0.8;">Jenis Tanaman</p>
+                        <p style="font-size: 14px; opacity: 0.8;">{{ __('messages.home.hero_stat_plants') }}</p>
                     </div>
                     <div>
                         <span style="font-size: 32px; font-weight: 800; color: #84cc16;">10K+</span>
-                        <p style="font-size: 14px; opacity: 0.8;">Pelanggan Puas</p>
+                        <p style="font-size: 14px; opacity: 0.8;">{{ __('messages.home.hero_stat_customers') }}</p>
                     </div>
                     <div>
                         <span style="font-size: 32px; font-weight: 800; color: #84cc16;">100%</span>
-                        <p style="font-size: 14px; opacity: 0.8;">Tanaman Sehat</p>
+                        <p style="font-size: 14px; opacity: 0.8;">{{ __('messages.home.hero_stat_healthy') }}</p>
                     </div>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                         <i class="fas fa-seedling"></i>
                     </div>
                     <div>
-                        <p style="font-size: 14px; color: #6b7280; margin: 0;">Tanaman Terlaris</p>
+                        <p style="font-size: 14px; color: #6b7280; margin: 0;">{{ __('messages.home.hero_bestseller') }}</p>
                         <p style="font-size: 16px; font-weight: 700; color: #064e3b; margin: 0;">Monstera Deliciosa</p>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                 <div class="segment-overlay">
                     <div class="segment-icon"><i class="fas {{ $category['icon'] }}"></i></div>
                     <h3 class="segment-name">{{ $category['name'] }}</h3>
-                    <p class="segment-count">{{ $category['count'] }}+ Produk</p>
+                    <p class="segment-count">{{ __('messages.home.products_count', ['count' => $category['count']]) }}</p>
                 </div>
             </a>
             @endforeach
@@ -92,22 +92,22 @@
                     @if($product['badge'])
                     <span class="plant-badge badge-{{ $product['badge'] }}">
                         @if($product['badge'] == 'sale') -{{ $product['discount'] }}%
-                        @elseif($product['badge'] == 'new') Baru
-                        @elseif($product['badge'] == 'rare') Langka
+                        @elseif($product['badge'] == 'new') {{ __('messages.home.hero_bestseller') === 'Terlaris' ? 'Baru' : 'New' }}
+                        @elseif($product['badge'] == 'rare') {{ app()->getLocale()==='id' ? 'Langka' : 'Rare' }}
                         @else {{ ucfirst($product['badge']) }}
                         @endif
                     </span>
                     @endif
                     <div class="plant-overlay">
                         <div class="plant-actions">
-                            <a href="{{ route('product.detail', $product['slug']) }}" class="plant-action-btn" title="Lihat Detail"><i class="fas fa-eye"></i></a>
+                            <a href="{{ route('product.detail', $product['slug']) }}" class="plant-action-btn" title="{{ __('messages.shop.view_detail') }}"><i class="fas fa-eye"></i></a>
                             <form action="{{ route('cart.add') }}" method="POST" style="display: inline;">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product['id'] }}">
-                                <button type="submit" class="plant-action-btn" title="Tambah ke Keranjang"><i class="fas fa-shopping-cart"></i></button>
+                                <button type="submit" class="plant-action-btn" title="{{ __('messages.button.add_to_cart') }}"><i class="fas fa-shopping-cart"></i></button>
                             </form>
                             @php $inWishlistHome = in_array($product['id'], $wishlistIds ?? []); @endphp
-                            <button type="button" class="plant-action-btn btn-wishlist {{ $inWishlistHome ? 'active' : '' }}" data-product-id="{{ $product['id'] }}" title="Favorit">
+                            <button type="button" class="plant-action-btn btn-wishlist {{ $inWishlistHome ? 'active' : '' }}" data-product-id="{{ $product['id'] }}" title="{{ __('messages.shop.favorite') }}">
                                 <i class="{{ $inWishlistHome ? 'fas' : 'far' }} fa-heart"></i>
                             </button>
                         </div>
@@ -121,9 +121,9 @@
                         <span><i class="fas fa-sun"></i> {{ $product['light'] }}</span>
                     </div>
                     <div class="care-icons">
-                        <div class="care-icon" data-tooltip="Penyiraman {{ $product['watering'] }}">💧</div>
-                        <div class="care-icon" data-tooltip="Cahaya {{ $product['light'] }}">🌤</div>
-                        <div class="care-icon" data-tooltip="{{ $product['care_level'] }}">✨</div>
+                        <div class="care-icon" data-tooltip="{{ __('messages.shop.watering') }}: {{ pval($product['watering']) }}">💧</div>
+                        <div class="care-icon" data-tooltip="{{ __('messages.shop.light') }}: {{ pval($product['light']) }}">🌤</div>
+                        <div class="care-icon" data-tooltip="{{ pval($product['care_level']) }}">✨</div>
                     </div>
                     <div class="plant-price">
                         <span class="current">Rp {{ number_format($product['price'], 0, ',', '.') }}</span>
@@ -142,16 +142,16 @@
 <section class="care-guide-section">
     <div class="container">
         <div style="text-align: center; margin-bottom: 50px;">
-            <span style="display: inline-block; background: var(--primary-light); color: var(--primary-dark); padding: 8px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; margin-bottom: 16px;">Panduan Perawatan</span>
-            <h2 style="font-size: 36px; font-weight: 800; color: var(--text-dark); margin-bottom: 16px;">Tips Merawat Tanaman</h2>
-            <p style="color: var(--text-medium); max-width: 600px; margin: 0 auto;">Ikuti panduan sederhana ini untuk menjaga tanaman Anda tetap sehat dan subur</p>
+            <span style="display: inline-block; background: var(--primary-light); color: var(--primary-dark); padding: 8px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; margin-bottom: 16px;">{{ __('messages.home.care_tag') }}</span>
+            <h2 style="font-size: 36px; font-weight: 800; color: var(--text-dark); margin-bottom: 16px;">{{ __('messages.home.care_title') }}</h2>
+            <p style="color: var(--text-medium); max-width: 600px; margin: 0 auto;">{{ __('messages.home.care_subtitle') }}</p>
         </div>
         
         <div class="care-guide-grid">
             <div class="care-guide-card">
                 <div class="care-guide-icon"><i class="fas fa-tint"></i></div>
-                <h4>Penyiraman Tepat</h4>
-                <p>Siram tanaman saat media tanam mulai kering. Hindari menyiram terlalu sering yang dapat menyebabkan akar membusuk.</p>
+                <h4>{{ __('messages.home.care_watering_title') }}</h4>
+                <p>{{ __('messages.home.care_watering_desc') }}</p>
                 <div class="water-levels">
                     <div class="water-drop active"></div>
                     <div class="water-drop active"></div>
@@ -160,18 +160,18 @@
             </div>
             <div class="care-guide-card">
                 <div class="care-guide-icon"><i class="fas fa-sun"></i></div>
-                <h4>Cahaya yang Sesuai</h4>
-                <p>Setiap tanaman membutuhkan cahaya berbeda. Pahami kebutuhan cahaya tanaman Anda untuk pertumbuhan optimal.</p>
+                <h4>{{ __('messages.home.care_light_title') }}</h4>
+                <p>{{ __('messages.home.care_light_desc') }}</p>
                 <div style="display: flex; gap: 8px; margin-top: 16px;">
-                    <span style="padding: 4px 12px; background: white; border-radius: 20px; font-size: 12px; color: var(--primary-color);">🌤 Teduh</span>
-                    <span style="padding: 4px 12px; background: white; border-radius: 20px; font-size: 12px; color: var(--secondary-color);">☀️ Cerah</span>
+                    <span style="padding: 4px 12px; background: white; border-radius: 20px; font-size: 12px; color: var(--primary-color);">🌤 {{ __('messages.care.indirect_light') }}</span>
+                    <span style="padding: 4px 12px; background: white; border-radius: 20px; font-size: 12px; color: var(--secondary-color);">☀️ {{ __('messages.care.bright_light') }}</span>
                 </div>
             </div>
             <div class="care-guide-card">
                 <div class="care-guide-icon"><i class="fas fa-wind"></i></div>
-                <h4>Sirkulasi Udara</h4>
-                <p>Pastikan ruangan memiliki sirkulasi udara yang baik. Hindari menempatkan tanaman di dekat AC atau heater.</p>
-                <p style="margin-top: 12px; font-size: 13px; color: var(--primary-color);"><i class="fas fa-check-circle"></i> Udara segar = Tanaman sehat</p>
+                <h4>{{ __('messages.home.care_air_title') }}</h4>
+                <p>{{ __('messages.home.care_air_desc') }}</p>
+                <p style="margin-top: 12px; font-size: 13px; color: var(--primary-color);"><i class="fas fa-check-circle"></i> {{ __('messages.home.care_air_tip') }}</p>
             </div>
         </div>
     </div>
@@ -181,10 +181,10 @@
 <section class="seasonal-banner">
     <div class="container" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
         <div class="seasonal-content">
-            <span class="seasonal-tag">🌿 Promo Musiman</span>
-            <h2 class="seasonal-title">Diskon 30% untuk Tanaman Outdoor!</h2>
-            <p class="seasonal-desc">Persiapkan taman Anda untuk musim panas dengan koleksi tanaman outdoor terbaik kami. Penawaran terbatas!</p>
-            <a href="{{ route('category.outdoor') }}" class="btn-primary" style="display: inline-block; background: white; color: #059669; text-decoration: none;">Lihat Koleksi</a>
+            <span class="seasonal-tag">🌿 {{ __('messages.home.seasonal_tag') }}</span>
+            <h2 class="seasonal-title">{{ __('messages.home.seasonal_title') }}</h2>
+            <p class="seasonal-desc">{{ __('messages.home.seasonal_desc') }}</p>
+            <a href="{{ route('category.outdoor') }}" class="btn-primary" style="display: inline-block; background: white; color: #059669; text-decoration: none;">{{ __('messages.home.seasonal_btn') }}</a>
         </div>
         <div class="seasonal-image">
             <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=400&fit=crop" alt="Tanaman Outdoor">
@@ -192,26 +192,59 @@
     </div>
 </section>
 
-<!-- Testimonials -->
+<!-- Testimonials — F6: Real reviews from DB -->
 <section class="testimonial-section">
     <div class="container">
         <div style="text-align: center; margin-bottom: 50px;">
-            <span style="display: inline-block; background: white; color: var(--primary-dark); padding: 8px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; margin-bottom: 16px;">Testimonial</span>
-            <h2 style="font-size: 36px; font-weight: 800; color: var(--text-dark);">Apa Kata Pecinta Tanaman</h2>
+            <span style="display: inline-block; background: white; color: var(--primary-dark); padding: 8px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; margin-bottom: 16px;">
+                {{ app()->getLocale()==='id' ? '⭐ Ulasan Pelanggan' : '⭐ Customer Reviews' }}
+            </span>
+            <h2 style="font-size: 36px; font-weight: 800; color: var(--text-dark);">
+                {{ app()->getLocale()==='id' ? 'Apa Kata Pelanggan Kami' : 'What Our Customers Say' }}
+            </h2>
         </div>
-        
+
         <div class="testimonials-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
-            @foreach($testimonials as $testimonial)
+            @foreach($testimonials->take(3) as $t)
             <div class="testimonial-card">
-                <p class="testimonial-text">"{{ $testimonial['comment'] }}"</p>
-                <div class="testimonial-author">
-                    <img src="{{ $testimonial['avatar'] }}" alt="{{ $testimonial['name'] }}" class="testimonial-avatar">
-                    <div class="testimonial-info">
-                        <h5>{{ $testimonial['name'] }}</h5>
-                        <span>{{ $testimonial['location'] }}</span>
-                    </div>
-                    <span class="plant-lover-badge"><i class="fas fa-leaf"></i> Plant Lover</span>
+                {{-- Stars --}}
+                <div style="display:flex;gap:3px;margin-bottom:14px;">
+                    @for($s=1;$s<=5;$s++)
+                    <i class="fas fa-star" style="font-size:14px;color:{{ $s<=$t['rating']?'#f59e0b':'#e5e7eb' }};"></i>
+                    @endfor
                 </div>
+                <p class="testimonial-text" style="font-size:15px;line-height:1.7;color:#374151;margin-bottom:20px;">
+                    "{{ $t['comment'] }}"
+                </p>
+                <div class="testimonial-author">
+                    <div style="width:44px;height:44px;border-radius:50%;background:var(--gradient-primary);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:16px;flex-shrink:0;">
+                        {{ $t['avatar'] }}
+                    </div>
+                    <div>
+                        <h5 style="font-weight:700;color:#111827;margin:0;">{{ $t['name'] }}</h5>
+                        @if(!empty($t['product_name']))
+                        <span style="font-size:12px;color:#10b981;">🌿 {{ $t['product_name'] }}</span>
+                        @endif
+                    </div>
+                    <span class="plant-lover-badge" style="margin-left:auto;"><i class="fas fa-leaf"></i> Verified</span>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+<!-- F7: Trust Badges -->
+<section style="padding:48px 0;background:white;border-top:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;">
+    <div class="container">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;">
+            @foreach($trustBadges as $badge)
+            <div style="padding:24px 16px;">
+                <div style="width:56px;height:56px;background:var(--primary-light);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:22px;color:{{ $badge['color'] }};">
+                    <i class="fas {{ $badge['icon'] }}"></i>
+                </div>
+                <div style="font-size:28px;font-weight:900;color:{{ $badge['color'] }};line-height:1;">{{ $badge['value'] }}</div>
+                <div style="font-size:13px;color:#6b7280;margin-top:4px;font-weight:500;">{{ $badge['label'] }}</div>
             </div>
             @endforeach
         </div>
@@ -222,8 +255,8 @@
 <section class="benefits-section">
     <div class="container">
         <div style="text-align: center; margin-bottom: 50px;">
-            <span style="display: inline-block; background: white; color: var(--primary-dark); padding: 8px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; margin-bottom: 16px;">Keuntungan</span>
-            <h2 style="font-size: 36px; font-weight: 800; color: var(--text-dark);">Mengapa Memilih LongLeaf?</h2>
+            <span style="display: inline-block; background: white; color: var(--primary-dark); padding: 8px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; margin-bottom: 16px;">{{ __('messages.home.benefits_tag') }}</span>
+            <h2 style="font-size: 36px; font-weight: 800; color: var(--text-dark);">{{ __('messages.home.benefits_title', ['site' => App\Models\Setting::get('site_name','LongLeaf')]) }}</h2>
         </div>
         
         <div class="benefits-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;">
@@ -242,12 +275,12 @@
 <section class="newsletter-section">
     <div class="container">
         <div class="newsletter-content">
-            <h2>Bergabung dengan Komunitas LongLeaf</h2>
-            <p>Dapatkan tips perawatan tanaman, promo eksklusif, dan update koleksi terbaru langsung di inbox Anda.</p>
+            <h2>{{ __('messages.home.newsletter_title', ['site' => App\Models\Setting::get('site_name','LongLeaf')]) }}</h2>
+            <p>{{ __('messages.home.newsletter_desc') }}</p>
             <form action="{{ route('newsletter.subscribe') }}" method="POST" class="newsletter-form-green">
                 @csrf
-                <input type="email" name="email" placeholder="Masukkan email Anda" required>
-                <button type="submit">Berlangganan</button>
+                <input type="email" name="email" placeholder="{{ __('messages.home.newsletter_placeholder') }}" required>
+                <button type="submit">{{ __('messages.home.newsletter_btn') }}</button>
             </form>
         </div>
     </div>

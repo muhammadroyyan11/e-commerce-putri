@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductReview;
 use App\Models\Wishlist;
+use App\Helpers\SeoMeta;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
@@ -59,6 +60,10 @@ class ShopController extends Controller
             'sort'        => $sort,
             'wishlistIds' => $wishlistIds,
             'search'      => $search,
+            'seo'         => SeoMeta::shop(
+                $request->filled('search') ? 'Hasil pencarian: ' . $request->search : '',
+                'Jelajahi ratusan jenis tanaman hias indoor dan outdoor. Harga terjangkau, pengiriman aman ke seluruh Indonesia.'
+            ),
         ]);
     }
 
@@ -89,6 +94,7 @@ class ShopController extends Controller
             'avgRating'       => $reviews->avg('rating') ?? 0,
             'reviewCount'     => $reviews->count(),
             'inWishlist'      => $inWishlist,
+            'seo'             => SeoMeta::product($mappedProduct, $reviews->avg('rating') ?? 0, $reviews->count()),
         ])->with([
             'aiProductId'   => $product->id,
             'aiProductName' => $product->name,

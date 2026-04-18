@@ -131,4 +131,52 @@
         </div>
     </div>
 </section>
+
+{{-- F3: Related products --}}
+@if(isset($relatedProducts) && $relatedProducts->count() > 0)
+<section style="padding:48px 0 64px;background:#fff;">
+    <div class="container">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;">
+            <h2 style="font-size:22px;font-weight:800;">
+                {{ app()->getLocale()==='id' ? '🌿 Mungkin Kamu Juga Suka' : '🌿 You Might Also Like' }}
+            </h2>
+            <a href="{{ route('shop') }}" style="color:var(--primary-color);font-weight:600;text-decoration:none;font-size:14px;">
+                {{ __('messages.button.view_all') }} →
+            </a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;">
+            @foreach($relatedProducts as $rp)
+            <div class="plant-card">
+                <div class="plant-image" style="height:200px;">
+                    <img src="{{ $rp['image'] }}" alt="{{ $rp['name'] }}">
+                    @if($rp['badge'])
+                    <span class="plant-badge badge-{{ $rp['badge'] }}">{{ ucfirst($rp['badge']) }}</span>
+                    @endif
+                    <div class="plant-overlay">
+                        <div class="plant-actions">
+                            <a href="{{ route('product.detail', $rp['slug']) }}" class="plant-action-btn"><i class="fas fa-eye"></i></a>
+                            <form action="{{ route('cart.add') }}" method="POST" style="display:inline;">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $rp['id'] }}">
+                                <button type="submit" class="plant-action-btn"><i class="fas fa-shopping-cart"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="plant-info">
+                    <span class="plant-category">{{ $rp['category'] }}</span>
+                    <h3 class="plant-name"><a href="{{ route('product.detail', $rp['slug']) }}">{{ $rp['name'] }}</a></h3>
+                    <div class="plant-price">
+                        <span class="current">{{ $currency->format($rp['price'], $currentCurrency) }}</span>
+                        @if($rp['original_price'])
+                        <span class="original">{{ $currency->format($rp['original_price'], $currentCurrency) }}</span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
 @endsection

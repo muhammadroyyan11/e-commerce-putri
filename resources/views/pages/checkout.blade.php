@@ -94,20 +94,20 @@
 
                     <!-- Shipping Options -->
                     <div style="background: white; border-radius: 16px; padding: 30px; margin-bottom: 20px;">
-                        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;"><i class="fas fa-truck" style="color: var(--primary-color); margin-right: 10px;"></i> Shipping / Pengiriman</h3>
+                        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;"><i class="fas fa-truck" style="color: var(--primary-color); margin-right: 10px;"></i> {{ __('messages.checkout_extra.shipping_title') }}</h3>
 
                         {{-- Kota (hanya Indonesia) --}}
                         <div id="city-wrapper" style="display:none; margin-bottom: 16px;">
-                            <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px;">Kota Tujuan / Destination City *</label>
+                            <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px;">{{ __('messages.checkout_extra.city_label') }} *</label>
                             <select id="city-select" style="width: 100%;"></select>
                         </div>
 
                         <div id="shipping-loading" style="display:none; font-size:14px; color: var(--text-medium);">
-                            <i class="fas fa-spinner fa-spin mr-1"></i> Calculating shipping cost...
+                            <i class="fas fa-spinner fa-spin mr-1"></i> {{ __('messages.checkout_extra.calculating') }}
                         </div>
                         <div id="shipping-options" style="display:flex; flex-direction:column; gap:10px;"></div>
                         <div id="shipping-placeholder" style="font-size:14px; color: var(--text-medium);">
-                            <i class="fas fa-info-circle mr-1"></i> Select your country to see shipping options.
+                            <i class="fas fa-info-circle mr-1"></i> {{ __('messages.checkout_extra.select_country_hint') }}
                         </div>
 
                         <input type="hidden" name="shipping_cost" id="shipping_cost" value="0">
@@ -130,15 +130,15 @@
                                     <div style="font-weight: 600; display: flex; align-items: center; gap: 8px;">
                                         {{ $method->name }}
                                         @if($method->isMidtrans())
-                                            <span style="font-size: 11px; font-weight: 600; background: #dbeafe; color: #1d4ed8; padding: 2px 8px; border-radius: 20px;">Midtrans</span>
+                                            <span style="font-size: 11px; font-weight: 600; background: #dbeafe; color: #1d4ed8; padding: 2px 8px; border-radius: 20px;">{{ __('messages.checkout_extra.midtrans_badge') }}</span>
                                         @else
-                                            <span style="font-size: 11px; font-weight: 600; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 20px;">Transfer Manual</span>
+                                            <span style="font-size: 11px; font-weight: 600; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 20px;">{{ __('messages.checkout_extra.manual_badge') }}</span>
                                         @endif
                                     </div>
                                     @if($method->isManual())
                                     <div style="font-size: 13px; color: var(--text-medium);">{{ $method->account_number }} a.n. {{ $method->account_name }}</div>
                                     @else
-                                    <div style="font-size: 13px; color: var(--text-medium);">Bayar via Midtrans (kartu kredit, transfer, e-wallet)</div>
+                                    <div style="font-size: 13px; color: var(--text-medium);">{{ __('messages.checkout_extra.midtrans_desc') }}</div>
                                     @endif
                                 </div>
                             </label>
@@ -178,7 +178,7 @@
                             <span>{{ $currency->format($summary['subtotal'], $currentCurrency) }}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px;">
-                            <span>Ongkir / Shipping</span>
+                            <span>{{ __('messages.checkout_extra.shipping_label') }}</span>
                             <span id="shipping-display" style="color: var(--text-medium);">-</span>
                         </div>
                         <div id="coupon-discount-row" style="display: none; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: #16a34a;">
@@ -195,13 +195,13 @@
 
                     <!-- Coupon Input -->
                     <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color);">
-                        <p style="font-size: 14px; font-weight: 600; margin-bottom: 10px;"><i class="fas fa-ticket-alt" style="color: var(--primary-color); margin-right: 6px;"></i> Punya kode coupon?</p>
+                        <p style="font-size: 14px; font-weight: 600; margin-bottom: 10px;"><i class="fas fa-ticket-alt" style="color: var(--primary-color); margin-right: 6px;"></i> {{ __('messages.checkout_extra.coupon_label') }}</p>
                         <div style="display: flex; gap: 8px;">
-                            <input type="text" id="coupon_input" maxlength="5" placeholder="Masukkan kode"
+                            <input type="text" id="coupon_input" maxlength="5" placeholder="{{ __('messages.checkout_extra.coupon_placeholder') }}"
                                 style="flex: 1; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; text-transform: uppercase;">
                             <button type="button" id="apply_coupon_btn"
                                 style="padding: 10px 16px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer;">
-                                Pakai
+                                {{ __('messages.checkout_extra.coupon_apply') }}
                             </button>
                         </div>
                         <div id="coupon-message" style="margin-top: 8px; font-size: 13px;"></div>

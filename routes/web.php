@@ -102,6 +102,16 @@ Route::middleware('auth')->group(function () {
     // Review Routes
     Route::post('/orders/{order}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
+    // Account — Profile & Addresses
+    Route::get('/account/profile',                    [\App\Http\Controllers\AccountController::class, 'profile'])->name('account.profile');
+    Route::put('/account/profile',                    [\App\Http\Controllers\AccountController::class, 'updateProfile'])->name('account.profile.update');
+    Route::put('/account/password',                   [\App\Http\Controllers\AccountController::class, 'updatePassword'])->name('account.password.update');
+    Route::get('/account/addresses',                  [\App\Http\Controllers\AccountController::class, 'addresses'])->name('account.addresses');
+    Route::post('/account/addresses',                 [\App\Http\Controllers\AccountController::class, 'storeAddress'])->name('account.addresses.store');
+    Route::put('/account/addresses/{address}',        [\App\Http\Controllers\AccountController::class, 'updateAddress'])->name('account.addresses.update');
+    Route::delete('/account/addresses/{address}',     [\App\Http\Controllers\AccountController::class, 'destroyAddress'])->name('account.addresses.destroy');
+    Route::post('/account/addresses/{address}/primary', [\App\Http\Controllers\AccountController::class, 'setPrimaryAddress'])->name('account.addresses.primary');
+
     // AI Routes (auth required to prevent abuse)
     Route::post('/ai/chat', [AiController::class, 'chat'])->name('ai.chat');
 });
@@ -155,8 +165,23 @@ Route::get('/locale/{locale}', function ($locale) {
 // Wishlist Route (AJAX)
 Route::post('/wishlist/toggle', [ShopController::class, 'toggleWishlist'])->name('wishlist.toggle');
 
+// F8: Shared wishlist (public, no auth)
+Route::get('/wishlist/shared/{token}', [WishlistController::class, 'shared'])->name('wishlist.shared');
+
+// FAQ public page
+Route::get('/faq', [\App\Http\Controllers\FaqController::class, 'index'])->name('faq');
+
 // Newsletter Subscription
 Route::post('/newsletter/subscribe', [HomeController::class, 'subscribe'])->name('newsletter.subscribe');
+
+// Sitemap
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+
+// Robots.txt
+Route::get('/robots.txt', function () {
+    $content = "User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /cart\nDisallow: /checkout\nDisallow: /account/\n\nSitemap: " . route('sitemap');
+    return response($content)->header('Content-Type', 'text/plain');
+});
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -191,6 +216,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+
+        // Sales Report
+        Route::get('/reports/sales', [\App\Http\Controllers\Admin\SalesReportController::class, 'index'])->name('reports.sales');
+
+        // FAQ admin CRUD
+        Route::resource('faqs', \App\Http\Controllers\Admin\FaqController::class);
 
         // AI - Generate product description
         Route::post('/ai/generate-description', [\App\Http\Controllers\AiController::class, 'generateDescription'])->name('ai.generate-description');    });

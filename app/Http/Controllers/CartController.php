@@ -13,21 +13,44 @@ class CartController extends Controller
         $cartItems = Cart::with('product')->where('user_id', auth()->id())->get()->map(function ($cart) {
             $product = $cart->product;
             return [
-                'id' => $product->id,
-                'name' => $product->name,
-                'slug' => $product->slug,
-                'price' => $product->price,
+                'id'             => $product->id,
+                'name'           => $product->name,
+                'slug'           => $product->slug,
+                'price'          => $product->price,
                 'original_price' => $product->original_price,
-                'quantity' => $cart->quantity,
-                'size' => 'Standar',
-                'sku' => 'TH-' . strtoupper(substr($product->slug, 0, 3)) . '-' . str_pad($product->id, 3, '0', STR_PAD_LEFT),
-                'image' => $product->image ?? 'https://via.placeholder.com/100',
+                'quantity'       => $cart->quantity,
+                'size'           => 'Standar',
+                'sku'            => 'TH-' . strtoupper(substr($product->slug, 0, 3)) . '-' . str_pad($product->id, 3, '0', STR_PAD_LEFT),
+                'image'          => $product->image ?? 'https://via.placeholder.com/100',
+                'category_id'    => $product->category_id,
             ];
         })->toArray();
 
         $summary = $this->calculateSummary($cartItems);
 
-        return view('pages.cart', compact('cartItems', 'summary'));
+        // F3: Related products — from same categories as cart items, exclude cart products
+        $cartProductIds    = collect($cartItems)->pluck('id')->toArray();
+        $cartCategoryIds   = collect($cartItems)->pluck('category_id')->unique()->toArray();
+        $relatedProducts   = Product::with(['category','images'])
+            ->whereIn('category_id', $cartCategoryIds)
+            ->whereNotIn('id', $cartProductIds)
+            ->where('is_active', true)
+            ->inRandomOrder()
+            ->take(4)
+            ->get()
+            ->map(fn($p) => [
+                'id'             => $p->id,
+                'name'           => $p->name,
+                'slug'           => $p->slug,
+                'category'       => $p->category?->name ?? '',
+                'price'          => $p->price,
+                'original_price' => $p->original_price,
+                'discount'       => $p->discount,
+                'image'          => $p->primaryImage()?->url ?? $p->image ?? 'https://via.placeholder.com/400x500',
+                'badge'          => $p->badge,
+            ]);
+
+        return view('pages.cart', compact('cartItems', 'summary', 'relatedProducts'));
     }
 
     public function add(Request $request)

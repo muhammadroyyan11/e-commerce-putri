@@ -95,6 +95,12 @@
                                 <p>Newsletter</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.faqs.index') }}" class="nav-link {{ request()->routeIs('admin.faqs.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-question-circle"></i>
+                                <p>FAQ</p>
+                            </a>
+                        </li>
                         <li class="nav-header">PEMBAYARAN</li>
                         <li class="nav-item">
                             <a href="{{ route('admin.payment-methods.index') }}" class="nav-link {{ request()->routeIs('admin.payment-methods.*') ? 'active' : '' }}">
@@ -106,6 +112,13 @@
                             <a href="{{ route('admin.coupons.index') }}" class="nav-link {{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-ticket-alt"></i>
                                 <p>Coupon / Voucher</p>
+                            </a>
+                        </li>
+                        <li class="nav-header">LAPORAN</li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.reports.sales') }}" class="nav-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-chart-line"></i>
+                                <p>Laporan Penjualan</p>
                             </a>
                         </li>
                         <li class="nav-header">KONFIGURASI</li>

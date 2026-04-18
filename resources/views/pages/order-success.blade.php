@@ -34,14 +34,14 @@
         <div style="background: #dbeafe; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
             <p style="font-size: 14px; color: #1e40af; margin: 0;">
                 <i class="fas fa-check-circle" style="margin-right: 8px;"></i>
-                Pembayaran Anda diproses melalui Midtrans. Status pesanan akan diperbarui otomatis setelah pembayaran dikonfirmasi.
+                {{ __('messages.payment_form.midtrans_notice') }}
             </p>
         </div>
         @else
         <div style="background: var(--primary-lighter); border-radius: 12px; padding: 20px; margin-bottom: 30px;">
             <p style="font-size: 14px; color: var(--text-medium); margin: 0;">
                 <i class="fas fa-info-circle" style="color: var(--primary-color); margin-right: 8px;"></i>
-                Silakan lakukan transfer sesuai metode pembayaran yang dipilih, lalu konfirmasi pembayaran Anda.
+                {{ __('messages.payment_form.manual_notice') }}
             </p>
         </div>
         @endif

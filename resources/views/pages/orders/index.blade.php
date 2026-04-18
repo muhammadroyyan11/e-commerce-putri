@@ -22,7 +22,7 @@ $statusStyles = [
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
                 <a href="{{ route('customer.orders.index') }}"
                     style="padding:7px 16px; border-radius:999px; font-size:13px; font-weight:600; text-decoration:none; {{ empty($activeStatus) ? 'background:#14532d; color:white;' : 'background:white; color:#14532d; border:1px solid #bbf7d0;' }}">
-                    All ({{ $summary['all'] }})
+                    {{ __('messages.orders_extra.all') }} ({{ $summary['all'] }})
                 </a>
                 @foreach($statusOptions as $value => $label)
                 <a href="{{ route('customer.orders.index', ['status' => $value]) }}"
@@ -58,7 +58,7 @@ $statusStyles = [
                     <span>{{ $item->product_name }} ×{{ $item->quantity }}</span>@if(!$loop->last)<span style="margin:0 6px; color:#cbd5e1;">·</span>@endif
                 @endforeach
                 @if($order->items->count() > 2)
-                    <span style="color:#94a3b8;"> +{{ $order->items->count() - 2 }} more</span>
+                    <span style="color:#94a3b8;"> {{ __('messages.orders_extra.more_items', ['count' => $order->items->count() - 2]) }}</span>
                 @endif
             </div>
 
@@ -66,7 +66,7 @@ $statusStyles = [
             <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
                 <a href="{{ route('customer.orders.show', $order) }}"
                     style="padding:7px 14px; border-radius:8px; font-size:12px; font-weight:600; text-decoration:none; color:#14532d; border:1px solid #86efac; background:#f0fdf4;">
-                    Detail
+                    {{ __('messages.orders_extra.detail') }}
                 </a>
                 @if($order->status === 'pending' && $order->payment_type)
                     <a href="{{ route('payment.detail', $order) }}"
@@ -76,24 +76,24 @@ $statusStyles = [
                     <form action="{{ route('customer.orders.change-payment', $order) }}" method="POST" style="display:inline;">
                         @csrf
                         <button type="submit" style="padding:7px 14px; border-radius:8px; font-size:12px; font-weight:600; color:#1d4ed8; border:1px solid #93c5fd; background:#eff6ff; cursor:pointer;">
-                            <i class="fas fa-exchange-alt"></i> Change
+                            <i class="fas fa-exchange-alt"></i> {{ __('messages.orders_extra.change') }}
                         </button>
                     </form>
                 @elseif($order->status === 'pending' && $order->paymentMethod?->isMidtrans() && !$order->payment_type)
                     <a href="{{ route('payment.select', $order) }}"
                         style="padding:7px 14px; border-radius:8px; font-size:12px; font-weight:600; text-decoration:none; color:white; background:#16a34a;">
-                        <i class="fas fa-wallet"></i> Pay Now
+                        <i class="fas fa-wallet"></i> {{ __('messages.orders.pay_now') }}
                     </a>
                 @elseif($canConfirm && !$order->paymentMethod?->isMidtrans())
                     <a href="{{ route('payment-confirmation.create', $order) }}"
                         style="padding:7px 14px; border-radius:8px; font-size:12px; font-weight:600; text-decoration:none; color:#9a3412; border:1px solid #fdba74; background:#fff7ed;">
-                        Upload Proof
+                        {{ __('messages.orders_extra.upload_proof') }}
                     </a>
                 @endif
                 @if($order->status === 'pending')
                     <button onclick="showCancelModal({{ $order->id }})"
                         style="padding:7px 14px; border-radius:8px; font-size:12px; font-weight:600; color:#991b1b; border:1px solid #fca5a5; background:#fff1f2; cursor:pointer;">
-                        <i class="fas fa-times"></i> Cancel
+                        <i class="fas fa-times"></i> {{ __('messages.orders_extra.cancel') }}
                     </button>
                 @endif
             </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BlogPost;
+use App\Helpers\SeoMeta;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
@@ -52,7 +53,8 @@ class BlogController extends Controller
             ->map(fn (BlogPost $item) => $this->transformPost($item));
         $comments = $this->getComments($blogPost->id);
 
-        return view('pages.blog-detail', compact('post', 'relatedPosts', 'comments'));
+        return view('pages.blog-detail', compact('post', 'relatedPosts', 'comments'))
+            ->with('seo', SeoMeta::blog($blogPost));
     }
 
     private function transformPost(BlogPost $post, bool $detail = false): array

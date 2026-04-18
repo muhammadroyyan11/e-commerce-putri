@@ -10,6 +10,18 @@
 
 <section style="padding: 40px 0 60px; background: var(--bg-light);">
     <div class="container">
+
+        {{-- F8: Share button --}}
+        @if(!$wishlists->isEmpty())
+        <div style="display:flex;justify-content:flex-end;margin-bottom:20px;">
+            <button onclick="copyShareLink()" id="share-btn"
+                style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:white;border:1.5px solid var(--border-color);border-radius:12px;font-weight:600;font-size:14px;cursor:pointer;color:var(--primary-dark);transition:all .2s;">
+                <i class="fas fa-share-alt" style="color:var(--primary-color);"></i>
+                {{ __('messages.wishlist_extra.share') }}
+            </button>
+            <input type="hidden" id="share-url" value="{{ $shareUrl }}">
+        </div>
+        @endif
         @if($wishlists->isEmpty())
             <div style="text-align:center; padding:60px 20px; background:white; border-radius:20px;">
                 <div style="font-size:64px; margin-bottom:16px;">🌿</div>
@@ -74,6 +86,17 @@ function removeWishlist(productId, btn) {
             btn.closest('.plant-card').remove();
             document.getElementById('wishlist-badge').textContent = data.count;
         }
+    });
+}
+
+function copyShareLink() {
+    const url = document.getElementById('share-url').value;
+    navigator.clipboard.writeText(url).then(() => {
+        const btn = document.getElementById('share-btn');
+        btn.innerHTML = '<i class="fas fa-check" style="color:#10b981;"></i> {{ __('messages.wishlist_extra.link_copied') }}';
+        setTimeout(() => {
+            btn.innerHTML = '<i class="fas fa-share-alt" style="color:var(--primary-color);"></i> {{ __('messages.wishlist_extra.share') }}';
+        }, 2500);
     });
 }
 </script>

@@ -79,10 +79,12 @@ $wishlistCount= auth()->check() ? Wishlist::where('user_id', auth()->id())->coun
                     <button class="icon-btn user-toggle" onclick="toggleUserDropdown()"><i class="fas fa-user"></i></button>
                     <div id="user-dropdown" style="display:none;position:absolute;right:0;top:44px;background:white;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.12);min-width:160px;z-index:2000;padding:8px 0;">
                         <div style="padding:8px 16px;font-weight:600;border-bottom:1px solid #eee;">{{ auth()->user()->name }}</div>
+                        <a href="{{ route('account.profile') }}" style="display:block;padding:10px 16px;color:#374151;text-decoration:none;font-size:14px;"><i class="fas fa-user" style="width:20px;"></i> {{ __('messages.account.profile_tab') }}</a>
                         @if(auth()->user()->is_admin)
                         <a href="{{ route('admin.dashboard') }}" style="display:block;padding:10px 16px;color:#374151;text-decoration:none;font-size:14px;"><i class="fas fa-tachometer-alt" style="width:20px;"></i> {{ __('messages.header.admin_panel') }}</a>
                         @endif
                         <a href="{{ route('customer.orders.index') }}" style="display:block;padding:10px 16px;color:#374151;text-decoration:none;font-size:14px;"><i class="fas fa-box" style="width:20px;"></i> {{ __('messages.header.order_history') }}</a>
+                        <a href="{{ route('account.addresses') }}" style="display:block;padding:10px 16px;color:#374151;text-decoration:none;font-size:14px;"><i class="fas fa-map-marker-alt" style="width:20px;"></i> {{ __('messages.account.address_tab') }}</a>
                         <a href="{{ route('cart') }}" style="display:block;padding:10px 16px;color:#374151;text-decoration:none;font-size:14px;"><i class="fas fa-shopping-cart" style="width:20px;"></i> {{ __('messages.cart.title') }}</a>
                         <form method="POST" action="{{ route('logout') }}" style="margin:0;">
                             @csrf
@@ -166,10 +168,20 @@ $wishlistCount= auth()->check() ? Wishlist::where('user_id', auth()->id())->coun
             </div>
 
             @auth
+            <a href="{{ route('account.profile') }}" onclick="toggleDrawer()"
+               style="display:flex;align-items:center;gap:14px;padding:16px 20px;text-decoration:none;font-size:15px;color:#374151;border-bottom:1px solid #f8fafb;">
+                <i class="fas fa-user" style="color:#10b981;width:18px;text-align:center;"></i>
+                {{ __('messages.account.profile_tab') }}
+            </a>
             <a href="{{ route('customer.orders.index') }}" onclick="toggleDrawer()"
                style="display:flex;align-items:center;gap:14px;padding:16px 20px;text-decoration:none;font-size:15px;color:#374151;border-bottom:1px solid #f8fafb;">
                 <i class="fas fa-box" style="color:#10b981;width:18px;text-align:center;"></i>
                 {{ __('messages.header.order_history') }}
+            </a>
+            <a href="{{ route('account.addresses') }}" onclick="toggleDrawer()"
+               style="display:flex;align-items:center;gap:14px;padding:16px 20px;text-decoration:none;font-size:15px;color:#374151;border-bottom:1px solid #f8fafb;">
+                <i class="fas fa-map-marker-alt" style="color:#10b981;width:18px;text-align:center;"></i>
+                {{ __('messages.account.address_tab') }}
             </a>
             @if(auth()->user()->is_admin)
             <a href="{{ route('admin.dashboard') }}" onclick="toggleDrawer()"

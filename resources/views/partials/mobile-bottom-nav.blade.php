@@ -3,7 +3,8 @@ $cartCount = auth()->check() ? App\Models\Cart::where('user_id', auth()->id())->
 $isHome    = request()->routeIs('home');
 $isShop    = request()->routeIs('shop') || request()->routeIs('product.detail') || request()->routeIs('category.*');
 $isCart    = request()->routeIs('cart');
-$isAccount = request()->routeIs('customer.orders.*') || request()->routeIs('wishlist');
+$isAccount = request()->routeIs('customer.orders.*') || request()->routeIs('wishlist')
+          || request()->routeIs('account.*');
 $isId      = app()->getLocale() === 'id';
 @endphp
 
@@ -56,7 +57,7 @@ $isId      = app()->getLocale() === 'id';
 
     {{-- Account --}}
     @auth
-        <a href="{{ route('customer.orders.index') }}" class="bni {{ $isAccount ? 'bni--active' : '' }}">
+        <a href="{{ route('account.profile') }}" class="bni {{ $isAccount ? 'bni--active' : '' }}">
             <svg class="bni__svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>

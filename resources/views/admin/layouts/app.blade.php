@@ -101,6 +101,18 @@
                                 <p>FAQ</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.about.index') }}" class="nav-link {{ request()->routeIs('admin.about.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-info-circle"></i>
+                                <p>Halaman About</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.team.index') }}" class="nav-link {{ request()->routeIs('admin.team.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>Our Team</p>
+                            </a>
+                        </li>
                         <li class="nav-header">PEMBAYARAN</li>
                         <li class="nav-item">
                             <a href="{{ route('admin.payment-methods.index') }}" class="nav-link {{ request()->routeIs('admin.payment-methods.*') ? 'active' : '' }}">

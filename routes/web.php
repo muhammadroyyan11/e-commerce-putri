@@ -133,9 +133,7 @@ Route::get('/midtrans/unfinish', [MidtransController::class, 'unfinish'])->name(
 Route::get('/midtrans/error', [MidtransController::class, 'error'])->name('midtrans.error');
 
 // Static Pages
-Route::get('/about', function () {
-    return view('pages.about');
-})->name('about');
+Route::get('/about', [\App\Http\Controllers\AboutController::class, 'index'])->name('about');
 
 Route::get('/contact', function () {
     return view('pages.contact');
@@ -224,6 +222,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // FAQ admin CRUD
         Route::resource('faqs', \App\Http\Controllers\Admin\FaqController::class);
+
+        // About page settings
+        Route::get('/about', [\App\Http\Controllers\Admin\AboutSettingController::class, 'index'])->name('about.index');
+        Route::put('/about', [\App\Http\Controllers\Admin\AboutSettingController::class, 'update'])->name('about.update');
+
+        // Team members CRUD
+        Route::get('/team', [\App\Http\Controllers\Admin\TeamMemberController::class, 'index'])->name('team.index');
+        Route::post('/team', [\App\Http\Controllers\Admin\TeamMemberController::class, 'store'])->name('team.store');
+        Route::put('/team/{team}', [\App\Http\Controllers\Admin\TeamMemberController::class, 'update'])->name('team.update');
+        Route::delete('/team/{team}', [\App\Http\Controllers\Admin\TeamMemberController::class, 'destroy'])->name('team.destroy');
 
         // AI - Generate product description
         Route::post('/ai/generate-description', [\App\Http\Controllers\AiController::class, 'generateDescription'])->name('ai.generate-description');    });

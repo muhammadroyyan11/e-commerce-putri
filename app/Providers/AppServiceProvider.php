@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', function ($view) {
-            $currency = session('currency', 'IDR');
+            $currency = session('currency', 'USD');
             $view->with('currentCurrency', $currency);
             $view->with('currency', app(CurrencyService::class));
         });

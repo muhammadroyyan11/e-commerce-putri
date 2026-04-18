@@ -49,7 +49,7 @@ $statusStyles = [
                         {{ $status['label'] }}
                     </span>
                 </div>
-                <span style="font-size:15px; font-weight:800; color:#14532d;">Rp{{ number_format($order->total, 0, ',', '.') }}</span>
+                <span style="font-size:15px; font-weight:800; color:#14532d;">{{ $currency->format($order->total, $currentCurrency) }}</span>
             </div>
 
             {{-- Items compact --}}

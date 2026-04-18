@@ -45,9 +45,9 @@
                             <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 18px; border: 1px solid #e2e8f0; border-radius: 18px;">
                                 <div>
                                     <div style="font-weight: 700; color: #0f172a; margin-bottom: 4px;">{{ $item->product_name }}</div>
-                                    <div style="font-size: 14px; color: #64748b;">{{ $item->quantity }} x Rp{{ number_format($item->product_price, 0, ',', '.') }}</div>
+                                    <div style="font-size: 14px; color: #64748b;">{{ $item->quantity }} x {{ $currency->format($item->product_price, $currentCurrency) }}</div>
                                 </div>
-                                <div style="font-weight: 800; color: #0f172a;">Rp{{ number_format($item->subtotal, 0, ',', '.') }}</div>
+                                <div style="font-weight: 800; color: #0f172a;">{{ $currency->format($item->subtotal, $currentCurrency) }}</div>
                             </div>
                         @endforeach
                     </div>
@@ -176,11 +176,11 @@
                             }
                         @endphp
                         <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.payment_method') }}</span><strong style="text-align: right; color: #0f172a;">{{ $paymentLabel }}</strong></div>
-                        <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.subtotal') }}</span><strong style="color: #0f172a;">Rp{{ number_format($order->subtotal, 0, ',', '.') }}</strong></div>
-                        <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.discount') }}</span><strong style="color: #0f172a;">Rp{{ number_format($order->discount, 0, ',', '.') }}</strong></div>
-                        <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.shipping') }}</span><strong style="color: #0f172a;">Rp{{ number_format($order->shipping, 0, ',', '.') }}</strong></div>
+                        <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.subtotal') }}</span><strong style="color: #0f172a;">{{ $currency->format($order->subtotal, $currentCurrency) }}</strong></div>
+                        <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.discount') }}</span><strong style="color: #0f172a;">{{ $currency->format($order->discount, $currentCurrency) }}</strong></div>
+                        <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.shipping') }}</span><strong style="color: #0f172a;">{{ $currency->format($order->shipping, $currentCurrency) }}</strong></div>
                         <div style="height: 1px; background: #e2e8f0; margin: 6px 0;"></div>
-                        <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 18px;"><span style="font-weight: 700; color: #0f172a;">{{ __('messages.orders.total') }}</span><strong style="color: #14532d;">Rp{{ number_format($order->total, 0, ',', '.') }}</strong></div>
+                        <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 18px;"><span style="font-weight: 700; color: #0f172a;">{{ __('messages.orders.total') }}</span><strong style="color: #14532d;">{{ $currency->format($order->total, $currentCurrency) }}</strong></div>
                     </div>
                 </div>
 
@@ -216,7 +216,7 @@
                         </a>
                     @elseif($order->paymentConfirmation)
                         <div style="display: grid; gap: 10px; color: #475569;">
-                            <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.amount') }}</span><strong style="color: #0f172a;">Rp{{ number_format($order->paymentConfirmation->amount, 0, ',', '.') }}</strong></div>
+                            <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.amount') }}</span><strong style="color: #0f172a;">{{ $currency->format($order->paymentConfirmation->amount, $currentCurrency) }}</strong></div>
                             <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.sender') }}</span><strong style="color: #0f172a;">{{ $order->paymentConfirmation->sender_name }}</strong></div>
                             <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.payment_date') }}</span><strong style="color: #0f172a;">{{ $order->paymentConfirmation->payment_date->format('d M Y') }}</strong></div>
                             <div style="display: flex; justify-content: space-between; gap: 12px;"><span>{{ __('messages.orders.status') }}</span><strong style="color: #0f172a;">{{ ucfirst($order->paymentConfirmation->status) }}</strong></div>

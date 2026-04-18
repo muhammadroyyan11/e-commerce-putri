@@ -26,7 +26,7 @@
             </div>
             <div style="display: flex; justify-content: space-between; padding-top: 14px; border-top: 2px solid var(--border-color); font-weight: 700; font-size: 18px; color: var(--text-dark);">
                 <span>{{ __('messages.order.total_payment') }}</span>
-                <strong>Rp {{ number_format($order['total'], 0, ',', '.') }}</strong>
+                <strong>{{ $currency->format($order['total'], $currentCurrency) }}</strong>
             </div>
         </div>
 

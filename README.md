@@ -1,223 +1,183 @@
-# LongLeaf / LongLeaf — Feature Documentation
+# 🌿 GreenHaven — Plant E-Commerce
 
-## Tech Stack
-- **Framework**: Laravel 10
-- **Database**: MySQL / MariaDB
-- **Payment**: Midtrans Core API
-- **Shipping**: RajaOngkir Komerce (domestic) + Shippo (international)
-- **Currency**: Frankfurter.app (real-time exchange rates)
-- **Auth**: Laravel Sanctum + Google OAuth (Socialite)
+A full-featured bilingual (EN/ID) e-commerce platform for selling plants online, built with Laravel 10. Includes a customer storefront, admin panel, AI plant assistant, multi-currency support, and international shipping.
 
 ---
 
-## 1. Authentication
+## ✨ Features
 
-| Feature | Detail |
-|---------|--------|
-| Register / Login | Email & password |
-| Google OAuth | Login dengan akun Google |
-| Admin login | `/admin/login` — terpisah dari customer |
-| Middleware | `auth` untuk customer, `admin` untuk admin panel |
+### Customer Storefront
+- Product catalog with category filter, search, and sort
+- Infinite scroll product listing
+- Product detail with image gallery, care info, and reviews
+- Wishlist with shareable link
+- Cart & checkout with coupon/voucher support
+- Multi-currency display (IDR, USD, EUR, SGD, MYR, GBP, AUD, JPY)
+- Order history, tracking, and payment confirmation upload
+- Blog with comments & replies
+- FAQ page
+- Account management (profile, saved addresses)
+- **JEZY AI Plant Assistant** — floating chat bubble powered by Groq (llama-3.3-70b)
 
----
+### Admin Panel
+- Dashboard with revenue charts and order stats
+- Product management with multi-image upload and AI description generator
+- Category, blog post, FAQ, and newsletter management
+- Order management with status updates
+- Payment confirmation (approve/reject manual transfers)
+- Payment methods (manual transfer + Midtrans)
+- Coupon/voucher management
+- Shipping zones (flat rate fallback)
+- Sales settlement report with CSV export
+- Site settings (name, logo, contact info, social media, trust badges)
 
-## 2. Admin Panel (`/admin`)
+### Payments
+- **Manual transfer** — customer uploads proof, admin approves
+- **Midtrans** — VA (BCA, BNI, BRI, Mandiri), GoPay, QRIS, ShopeePay, Minimarket
 
-### Katalog
-- **Kategori** — CRUD kategori produk
-- **Produk** — CRUD produk (nama, harga, stok, berat gram, gambar, badge, dll)
-
-### Penjualan
-- **Pesanan** — lihat & update status order
-- **Konfirmasi Pembayaran** — approve/reject bukti transfer manual
-
-### Konten
-- **Blog / Artikel** — CRUD artikel dengan rich text editor
-- **Newsletter** — lihat & hapus subscriber
-
-### Pembayaran
-- **Metode Pembayaran** — CRUD (manual transfer / Midtrans), upload logo
-- **Coupon / Voucher** — CRUD coupon 5 digit, masa aktif, tipe persen/fixed
-
-### Konfigurasi
-- **API Settings** — toggle ON/OFF + isi key untuk:
-  - Midtrans (server key, client key, mode production/sandbox)
-  - RajaOngkir Komerce (API key, ID kota asal)
-  - Shippo (API token, kode pos asal, negara asal)
-- **Zona Pengiriman** — kelola flat rate per zona internasional
-- **Pengaturan** — nama toko, logo, dll
+### Shipping
+- **Domestic (Indonesia)** — RajaOngkir Komerce (JNE, TIKI, SiCepat, J&T, POS)
+- **International** — Shippo (DHL, FedEx, UPS) with flat-rate zone fallback
 
 ---
 
-## 3. Shop (Customer)
+## 🛠 Tech Stack
 
-### Halaman Toko (`/shop`)
-- Filter produk by kategori
-- Sort: Featured, Newest, Price Low-High, Price High-Low
-- **Search produk** — via toolbar & navbar search
-- Wishlist toggle (heart button)
-- Responsive: 2 kolom di mobile
-
-### Detail Produk (`/shop/{slug}`)
-- Gambar, deskripsi, harga, stok
-- Tombol Add to Cart
-- Related products
-
-### Wishlist (`/wishlist`)
-- Daftar produk yang di-wishlist
-- Hapus dari wishlist tanpa reload
+| Layer | Technology |
+|---|---|
+| Framework | Laravel 10 (PHP 8.1+) |
+| Database | MySQL |
+| Frontend | Blade, Vite, AdminLTE (admin) |
+| Auth | Laravel Sanctum + Google OAuth (Socialite) |
+| Payment | Midtrans Core API |
+| Shipping | RajaOngkir Komerce + Shippo |
+| Currency | Frankfurter.app (real-time, no API key needed) |
+| AI | Groq API (llama-3.3-70b-versatile) |
+| SEO | Dynamic meta tags, Open Graph, JSON-LD Schema, Sitemap XML |
 
 ---
 
-## 4. Cart & Checkout
+## 🚀 Installation
 
-### Cart (`/cart`)
-- Tambah, update qty, hapus item
-- Hitung subtotal otomatis
+### Requirements
+- PHP 8.1+
+- MySQL 8+
+- Composer
+- Node.js & npm
+- Laragon / XAMPP / Docker
 
-### Checkout (`/checkout`)
-- Form alamat pengiriman internasional (nama, alamat, kota, state/province, negara, kode pos, telepon)
-- **Dropdown negara** — Select2 + REST Countries API (~250 negara)
-- **Ongkir dinamis**:
-  - Indonesia → pilih kota → RajaOngkir (JNE, TIKI, POS, SiCepat, J&T)
-  - Internasional → Shippo (DHL, FedEx, dll) atau flat rate zona
-- **Coupon/Voucher** — input kode, validasi AJAX, diskon langsung terlihat
-- **Multi-currency** — total tampil dalam mata uang yang dipilih
+### Steps
 
----
+```bash
+# 1. Clone the repository
+git clone <repo-url>
+cd <project-folder>
 
-## 5. Pembayaran
+# 2. Install dependencies
+composer install
+npm install
 
-### Manual Transfer
-- Customer pilih metode manual (PayPal, BCA, dll)
-- Upload bukti bayar
-- Admin approve/reject di panel konfirmasi pembayaran
+# 3. Environment setup
+cp .env.example .env
+php artisan key:generate
 
-### Midtrans (Online Payment)
-- Customer pilih "Bayar Online"
-- **Halaman pilih metode** (`/payment/{order}/select`):
-  - Transfer Bank VA: BCA, BNI, BRI, Mandiri, Permata
-  - E-Wallet: GoPay, QRIS, ShopeePay
-  - Minimarket: Alfamart, Indomaret
-- **Halaman detail pembayaran** (`/payment/{order}/detail`):
-  - Tampil nomor VA / QR code / kode bayar
-  - Tombol salin VA
-  - Tombol download QR (via server proxy)
-  - Countdown expired
-  - Auto-refresh status setiap 15 detik
-- **Webhook** — status order otomatis update saat pembayaran berhasil
+# 4. Configure .env
+# Set DB_DATABASE, DB_USERNAME, DB_PASSWORD
+# Set APP_URL to your local domain
 
----
+# 5. Run migrations and seed
+php artisan migrate --seed
 
-## 6. Order Management (Customer)
+# 6. Create storage symlink
+php artisan storage:link
 
-### Riwayat Pesanan (`/account/orders`)
-- List semua order compact (nomor, tanggal, status, total, item)
-- Filter by status
-- Tombol aksi per order:
-  - **Detail** — lihat detail order
-  - **Bayar Sekarang** — ke halaman pembayaran (jika pending)
-  - **Ganti Metode Pembayaran** — reset & pilih ulang
-  - **Batalkan Pesanan** — dengan wajib isi alasan
+# 7. Build assets
+npm run build
 
-### Detail Order (`/account/orders/{id}`)
-- Info produk, alamat, ongkir, total
-- Status pembayaran (VA/QR/konfirmasi manual)
-- Tombol cancel & ganti payment
-- Tampil alasan pembatalan jika dibatalkan
+# 8. Start server (Laragon / artisan serve)
+php artisan serve
+```
 
 ---
 
-## 7. Shipping
+## ⚙️ Environment Variables
 
-### Domestik (Indonesia) — RajaOngkir Komerce
-- Endpoint: `https://rajaongkir.komerce.id/api/v1`
-- Pilih kota tujuan (dropdown Select2, ~500+ kota)
-- Kurir: JNE, TIKI, POS, SiCepat, J&T
-- Harga real-time
-- Kota di-cache 24 jam
+Key variables to configure in `.env`:
 
-### Internasional — Shippo
-- Endpoint: `https://api.goshippo.com`
-- Harga real-time dari carrier (DHL, FedEx, UPS, dll)
-- Fallback ke flat rate zona jika Shippo OFF atau tidak ada rates
+```env
+APP_URL=http://localhost
 
-### Zona Pengiriman (Flat Rate Fallback)
-| Zona | Contoh Negara | Default Rate |
-|------|--------------|-------------|
-| Indonesia | Indonesia | Rp 25.000 |
-| SEA | Malaysia, Singapore, Thailand | Rp 150.000 |
-| Asia Timur | Japan, Korea, China | Rp 250.000 |
-| Asia Selatan | India, Pakistan | Rp 280.000 |
-| Timur Tengah | UAE, Saudi Arabia | Rp 300.000 |
-| Australia & Pasifik | Australia, NZ | Rp 320.000 |
-| Eropa Barat | UK, Germany, France | Rp 400.000 |
-| Eropa Timur | Poland, Russia | Rp 420.000 |
-| Amerika Utara | US, Canada, Mexico | Rp 450.000 |
-| Amerika Selatan | Brazil, Argentina | Rp 500.000 |
-| Afrika | South Africa, Nigeria | Rp 550.000 |
+DB_DATABASE=your_database
+DB_USERNAME=root
+DB_PASSWORD=
+
+# Google OAuth
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT_URL="${APP_URL}/auth/google/callback"
+
+# Midtrans
+MIDTRANS_SERVER_KEY=
+MIDTRANS_CLIENT_KEY=
+MIDTRANS_IS_PRODUCTION=false
+
+# AI Assistant (Groq)
+GROQ_API_KEY=
+```
+
+> RajaOngkir and Shippo keys are configured via **Admin → API Settings** in the panel.
 
 ---
 
-## 8. Coupon / Voucher
-
-- Kode **5 karakter** (huruf kapital + angka)
-- Tipe: **Persen** (%) atau **Fixed** (Rp)
-- Masa aktif: tanggal mulai & berakhir
-- Minimum order
-- Maksimum diskon (opsional)
-- Batas pemakaian (opsional)
-- Validasi AJAX di checkout (real-time)
-
----
-
-## 9. Multi-Currency
-
-- Mata uang: IDR, USD, EUR, SGD, MYR, GBP, AUD, JPY
-- Switcher di header (dropdown)
-- Kurs dari **Frankfurter.app** (gratis, tanpa API key)
-- Cache kurs **1 jam**
-- Berlaku di: shop, product detail, checkout summary
-
----
-
-## 10. Internasionalisasi (i18n)
-
-- Bahasa: **Indonesia (ID)** dan **English (EN)**
-- Switcher di header
-- File lang: `resources/lang/id/messages.php` & `resources/lang/en/messages.php`
-
----
-
-## 11. Blog
-
-- List artikel (`/blog`)
-- Detail artikel (`/blog/{slug}`)
-- CRUD di admin panel dengan rich text editor (Quill)
-- Upload gambar artikel
-
----
-
-## 12. Lainnya
-
-- **Newsletter** — subscribe email dari homepage
-- **Google Analytics** ready (tambah tracking ID di settings)
-- **Responsive** — mobile-friendly (2 kolom grid di HP)
-- **SEO** — meta title & description per halaman
-
----
-
-## Deployment
-
-- Server: CyberPanel + OpenLiteSpeed
-- Domain: `putri.ypac.site`
-- Branch: `feature/midtrans-payment`
-- Deploy: `git pull && composer install --no-dev && php artisan migrate --force && php artisan config:cache`
-
----
-
-## Default Credentials
+## 🔑 Default Credentials
 
 | Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@LongLeaf.id | password |
+|---|---|---|
+| Admin | admin@greenhaven.id | password |
+
+---
+
+## 📁 Project Structure
+
+```
+app/
+├── Helpers/          # SeoMeta, ProductTranslator, CurrencyService
+├── Http/
+│   ├── Controllers/
+│   │   ├── Admin/    # Admin panel controllers
+│   │   └── *.php     # Customer-facing controllers
+│   └── Middleware/
+├── Models/           # Eloquent models
+└── Services/         # GroqService, CurrencyService
+
+resources/
+├── lang/
+│   ├── en/           # English translations
+│   └── id/           # Indonesian translations
+└── views/
+    ├── admin/        # AdminLTE-based admin views
+    ├── pages/        # Customer storefront pages
+    └── partials/     # Header, footer, AI bubble, etc.
+```
+
+---
+
+## 🌐 URLs
+
+| URL | Description |
+|---|---|
+| `/` | Homepage |
+| `/shop` | Product catalog |
+| `/blog` | Blog |
+| `/faq` | FAQ |
+| `/account/profile` | Customer profile |
+| `/account/addresses` | Saved addresses |
+| `/account/orders` | Order history |
+| `/sitemap.xml` | Auto-generated sitemap |
+| `/admin` | Admin panel |
+
+---
+
+## 📄 License
+
+MIT

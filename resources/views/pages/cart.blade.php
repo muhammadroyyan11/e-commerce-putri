@@ -71,7 +71,7 @@
                                     </div>
                                 </td>
                                 <td style="padding: 20px;">
-                                    <span style="font-weight: 600; color: var(--text-dark);">Rp {{ number_format($item['price'], 0, ',', '.') }}</span>
+                                    <span style="font-weight: 600; color: var(--text-dark);">{{ $currency->format($item['price'], $currentCurrency) }}</span>
                                 </td>
                                 <td style="padding: 20px;">
                                     <form action="{{ route('cart.update') }}" method="POST" style="display: flex; border: 1px solid var(--border-color); border-radius: 8px; width: fit-content;">
@@ -83,7 +83,7 @@
                                     </form>
                                 </td>
                                 <td style="padding: 20px;">
-                                    <span style="font-weight: 600; color: var(--text-dark);">Rp {{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}</span>
+                                    <span style="font-weight: 600; color: var(--text-dark);">{{ $currency->format($item['price'] * $item['quantity'], $currentCurrency) }}</span>
                                 </td>
                                 <td style="padding: 20px;">
                                     <form action="{{ route('cart.remove') }}" method="POST" style="display: inline;">
@@ -107,22 +107,22 @@
                     
                     <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: var(--text-medium);">
                         <span>{{ __('messages.cart.subtotal') }}</span>
-                        <span style="font-weight: 500;">Rp {{ number_format($summary['subtotal'], 0, ',', '.') }}</span>
+                        <span style="font-weight: 500;">{{ $currency->format($summary['subtotal'], $currentCurrency) }}</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px;">
                         <span>{{ __('messages.cart.discount') }}</span>
-                        <span style="color: var(--success-color);">-Rp {{ number_format($summary['discount'], 0, ',', '.') }}</span>
+                        <span style="color: var(--success-color);">-{{ $currency->format($summary['discount'], $currentCurrency) }}</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: var(--text-medium);">
                         <span>{{ __('messages.cart.shipping') }}</span>
-                        <span style="color: var(--success-color);">{{ $summary['shipping'] == 0 ? __('messages.cart.free_shipping') : 'Rp ' . number_format($summary['shipping'], 0, ',', '.') }}</span>
+                        <span style="color: var(--success-color);">{{ $summary['shipping'] == 0 ? __('messages.cart.free_shipping') : $currency->format($summary['shipping'], $currentCurrency) }}</span>
                     </div>
                     
                     <div style="height: 1px; background: var(--border-color); margin: 16px 0;"></div>
                     
                     <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: 700; color: var(--text-dark);">
                         <span>{{ __('messages.cart.total') }}</span>
-                        <span style="color: var(--primary-color); font-size: 24px;">Rp {{ number_format($summary['total'], 0, ',', '.') }}</span>
+                        <span style="color: var(--primary-color); font-size: 24px;">{{ $currency->format($summary['total'], $currentCurrency) }}</span>
                     </div>
 
                     <a href="{{ route('checkout') }}" style="display: block; width: 100%; padding: 16px; background: var(--gradient-primary); color: white; border-radius: 12px; font-weight: 600; font-size: 16px; text-align: center; text-decoration: none; margin-top: 24px;">{{ __('messages.button.checkout') }}</a>

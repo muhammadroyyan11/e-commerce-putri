@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BlogPost;
+use App\Models\BlogComment;
 use App\Helpers\SeoMeta;
 use Illuminate\Http\Request;
 
@@ -51,9 +52,16 @@ class BlogController extends Controller
             ->take(3)
             ->get()
             ->map(fn (BlogPost $item) => $this->transformPost($item));
-        $comments = $this->getComments($blogPost->id);
 
-        return view('pages.blog-detail', compact('post', 'relatedPosts', 'comments'))
+        // Real comments from DB — top-level only, replies eager-loaded
+        $comments = BlogComment::where('blog_post_id', $blogPost->id)
+            ->whereNull('parent_id')
+            ->where('is_approved', true)
+            ->with(['user', 'replies.user'])
+            ->latest()
+            ->get();
+
+        return view('pages.blog-detail', compact('post', 'blogPost', 'relatedPosts', 'comments'))
             ->with('seo', SeoMeta::blog($blogPost));
     }
 

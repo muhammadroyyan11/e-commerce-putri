@@ -123,6 +123,8 @@ Route::post('/ai/chat/guest', [AiController::class, 'chat'])->name('ai.chat.gues
 // Blog Routes
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.detail');
+Route::post('/blog/{blogPost}/comments', [\App\Http\Controllers\BlogCommentController::class, 'store'])->name('blog.comments.store');
+Route::delete('/blog/comments/{comment}', [\App\Http\Controllers\BlogCommentController::class, 'destroy'])->name('blog.comments.destroy')->middleware('auth');
 
 // Midtrans Routes
 Route::post('/midtrans/notification', [MidtransController::class, 'notification'])->name('midtrans.notification')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);

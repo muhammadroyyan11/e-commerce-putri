@@ -48,26 +48,79 @@
                 </div>
 
                 <!-- Comments -->
-                <section style="margin-top: 50px;">
-                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 30px;">{{ __('messages.blog.comments') }} ({{ count($comments) }})</h3>
-                    
-                    @foreach($comments as $comment)
-                    <div style="display: flex; gap: 16px; margin-bottom: 24px;">
-                        <img src="{{ $comment['avatar'] }}" alt="{{ $comment['name'] }}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; flex-shrink: 0;">
-                        <div style="flex: 1; background: var(--bg-light); border-radius: 12px; padding: 20px;">
-                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-                                <h5 style="font-size: 16px; font-weight: 600;">{{ $comment['name'] }}</h5>
-                                <span style="font-size: 13px; color: var(--text-muted);">{{ $comment['date'] }}</span>
-                            </div>
-                            <div style="color: #fbbf24; font-size: 12px; margin-bottom: 10px;">
-                                @for($i = 0; $i < $comment['rating']; $i++)
-                                    <i class="fas fa-star"></i>
-                                @endfor
-                            </div>
-                            <p style="color: var(--text-medium); line-height: 1.6; margin: 0;">{{ $comment['comment'] }}</p>
-                        </div>
+                <section style="margin-top:50px;" id="comments">
+                    <h3 style="font-size:22px;font-weight:800;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
+                        <i class="fas fa-comments" style="color:var(--primary-color);font-size:18px;"></i>
+                        {{ app()->getLocale()==='id' ? 'Komentar' : 'Comments' }}
+                        <span style="background:var(--primary-light);color:var(--primary-dark);font-size:13px;padding:3px 10px;border-radius:999px;">{{ $comments->count() }}</span>
+                    </h3>
+
+                    @if(session('comment_success'))
+                    <div style="background:#dcfce7;color:#166534;padding:12px 16px;border-radius:10px;margin-bottom:20px;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;">
+                        <i class="fas fa-check-circle"></i> {{ session('comment_success') }}
                     </div>
-                    @endforeach
+                    @endif
+
+                    {{-- Comment list --}}
+                    @forelse($comments as $comment)
+                    <div class="comment-thread" style="margin-bottom:20px;">
+                        @include('partials.blog-comment', ['comment' => $comment, 'blogPost' => $blogPost, 'depth' => 0])
+                    </div>
+                    @empty
+                    <div style="text-align:center;padding:32px;background:var(--bg-light);border-radius:14px;color:#9ca3af;margin-bottom:24px;">
+                        <i class="far fa-comment-dots" style="font-size:32px;display:block;margin-bottom:8px;"></i>
+                        <p style="font-size:14px;">{{ app()->getLocale()==='id' ? 'Belum ada komentar. Jadilah yang pertama!' : 'No comments yet. Be the first!' }}</p>
+                    </div>
+                    @endforelse
+
+                    {{-- Write a comment --}}
+                    <div style="background:var(--bg-light);border-radius:16px;padding:24px;margin-top:28px;" id="comment-form-section">
+                        <h4 style="font-size:16px;font-weight:800;margin-bottom:16px;">
+                            {{ app()->getLocale()==='id' ? '✍️ Tulis Komentar' : '✍️ Write a Comment' }}
+                        </h4>
+                        <form action="{{ route('blog.comments.store', $blogPost) }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="parent_id" id="reply-parent-id" value="">
+
+                            {{-- Reply indicator --}}
+                            <div id="reply-indicator" style="display:none;background:#dbeafe;color:#1e40af;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:12px;display:none;align-items:center;justify-content:space-between;">
+                                <span id="reply-to-name"></span>
+                                <button type="button" onclick="cancelReply()" style="background:none;border:none;cursor:pointer;color:#1e40af;font-size:16px;">✕</button>
+                            </div>
+
+                            @guest
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                                <div>
+                                    <label style="font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:5px;">{{ app()->getLocale()==='id' ? 'Nama *' : 'Name *' }}</label>
+                                    <input type="text" name="guest_name" value="{{ old('guest_name') }}" required
+                                        style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                                    @error('guest_name')<p style="color:#dc2626;font-size:12px;margin-top:3px;">{{ $message }}</p>@enderror
+                                </div>
+                                <div>
+                                    <label style="font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:5px;">Email *</label>
+                                    <input type="email" name="guest_email" value="{{ old('guest_email') }}" required
+                                        style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;box-sizing:border-box;">
+                                    @error('guest_email')<p style="color:#dc2626;font-size:12px;margin-top:3px;">{{ $message }}</p>@enderror
+                                </div>
+                            </div>
+                            @endguest
+
+                            <div style="margin-bottom:14px;">
+                                <label style="font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:5px;">
+                                    {{ app()->getLocale()==='id' ? 'Komentar *' : 'Comment *' }}
+                                </label>
+                                <textarea name="body" rows="4" required placeholder="{{ app()->getLocale()==='id' ? 'Tulis komentar Anda...' : 'Write your comment...' }}"
+                                    style="width:100%;padding:12px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;resize:vertical;box-sizing:border-box;">{{ old('body') }}</textarea>
+                                @error('body')<p style="color:#dc2626;font-size:12px;margin-top:3px;">{{ $message }}</p>@enderror
+                            </div>
+
+                            <button type="submit"
+                                style="display:inline-flex;align-items:center;gap:8px;padding:11px 22px;background:var(--gradient-primary);color:white;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;">
+                                <i class="fas fa-paper-plane"></i>
+                                {{ app()->getLocale()==='id' ? 'Kirim Komentar' : 'Post Comment' }}
+                            </button>
+                        </form>
+                    </div>
                 </section>
             </article>
 
@@ -86,4 +139,22 @@
         </div>
     </div>
 </section>
+@push('scripts')
+<script>
+function replyTo(commentId, authorName) {
+    document.getElementById('reply-parent-id').value = commentId;
+    const indicator = document.getElementById('reply-indicator');
+    document.getElementById('reply-to-name').textContent =
+        (document.documentElement.lang === 'id' ? 'Membalas ' : 'Replying to ') + authorName;
+    indicator.style.display = 'flex';
+    document.getElementById('comment-form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => document.querySelector('textarea[name="body"]').focus(), 400);
+}
+
+function cancelReply() {
+    document.getElementById('reply-parent-id').value = '';
+    document.getElementById('reply-indicator').style.display = 'none';
+}
+</script>
+@endpush
 @endsection

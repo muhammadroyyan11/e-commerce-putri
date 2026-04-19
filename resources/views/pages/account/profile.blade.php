@@ -56,6 +56,34 @@
                     </form>
                 </div>
 
+                {{-- Referral Code --}}
+                <div style="background:white;border-radius:20px;padding:28px;box-shadow:0 1px 4px rgba(0,0,0,.05);">
+                    <h2 style="font-size:17px;font-weight:800;margin-bottom:4px;">Kode Referral</h2>
+                    <p style="font-size:13px;color:#6b7280;margin-bottom:20px;">Bagikan link ini ke teman. Setiap teman yang daftar via link kamu akan tercatat.</p>
+
+                    <div style="display:flex;align-items:center;gap:12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:16px 20px;">
+                        <i class="fas fa-gift" style="color:var(--primary-color);font-size:20px;"></i>
+                        <div style="flex:1;">
+                            <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Kode kamu</div>
+                            <div style="font-size:22px;font-weight:800;letter-spacing:4px;color:var(--primary-color);" id="ref-code">{{ $user->referral_code ?? '—' }}</div>
+                        </div>
+                        @if($user->referral_code)
+                        <button onclick="copyRefLink()" style="padding:10px 18px;background:var(--gradient-primary);color:white;border:none;border-radius:10px;font-weight:600;font-size:13px;cursor:pointer;" id="copy-btn">
+                            <i class="fas fa-copy"></i> Salin Link
+                        </button>
+                        @endif
+                    </div>
+
+                    @if($user->referral_code)
+                    <div style="margin-top:12px;font-size:12px;color:#9ca3af;word-break:break-all;" id="ref-link-display">
+                        {{ url('/ref/' . $user->referral_code) }}
+                    </div>
+                    <div style="margin-top:12px;font-size:13px;color:#6b7280;">
+                        Total teman yang daftar via kamu: <strong style="color:var(--primary-color);">{{ $user->referrals()->count() }}</strong>
+                    </div>
+                    @endif
+                </div>
+
                 {{-- Password form --}}
                 <div style="background:white;border-radius:20px;padding:28px;box-shadow:0 1px 4px rgba(0,0,0,.05);">
                     <h2 style="font-size:17px;font-weight:800;margin-bottom:4px;">{{ __('messages.account.change_password') }}</h2>
@@ -96,4 +124,17 @@
 </section>
 
 @include('pages.account._styles')
+
+@push('scripts')
+<script>
+function copyRefLink() {
+    const link = '{{ url('/ref/' . ($user->referral_code ?? '')) }}';
+    navigator.clipboard.writeText(link).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.innerHTML = '<i class="fas fa-check"></i> Tersalin!';
+        setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i> Salin Link', 2000);
+    });
+}
+</script>
+@endpush
 @endsection

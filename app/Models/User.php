@@ -20,6 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'email_verified_at', 'password',
         'is_admin', 'google_id', 'avatar', 'phone',
+        'referral_code', 'referred_by',
     ];
 
     /**
@@ -41,6 +42,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function referrer()
+    {
+        return $this->belongsTo(User::class, 'referred_by');
+    }
+
+    public function referrals()
+    {
+        return $this->hasMany(User::class, 'referred_by');
+    }
 
     public function addresses()
     {

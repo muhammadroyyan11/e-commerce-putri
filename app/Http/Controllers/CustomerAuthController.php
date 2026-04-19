@@ -51,16 +51,29 @@ class CustomerAuthController extends Controller
 
     public function register(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
-        $validated['is_admin'] = false;
+        $referrerCode = $request->input('referral_code') ?: session('referral_code');
+        $referredBy = null;
+        if ($referrerCode) {
+            $referrer = User::where('referral_code', $referrerCode)->first();
+            $referredBy = $referrer?->id;
+        }
 
-        $user = User::create($validated);
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'is_admin' => false,
+            'referral_code' => strtoupper(Str::random(8)),
+            'referred_by' => $referredBy,
+        ]);
+
+        session()->forget('referral_code');
         Auth::login($user);
 
         return redirect()->route('home')->with('success', 'Selamat datang! Akun Anda berhasil dibuat.');
@@ -105,6 +118,13 @@ class CustomerAuthController extends Controller
                 'email_verified_at' => $user->email_verified_at ?: now(),
             ])->save();
         } else {
+            $referrerCode = session('referral_code');
+            $referredBy = null;
+            if ($referrerCode) {
+                $referrer = User::where('referral_code', $referrerCode)->first();
+                $referredBy = $referrer?->id;
+            }
+
             $user = User::create([
                 'name' => $googleUser->getName() ?: $googleUser->getNickname() ?: 'Google User',
                 'email' => $googleUser->getEmail(),
@@ -112,7 +132,11 @@ class CustomerAuthController extends Controller
                 'google_id' => $googleUser->getId(),
                 'avatar' => $googleUser->getAvatar(),
                 'email_verified_at' => now(),
+                'referral_code' => strtoupper(Str::random(8)),
+                'referred_by' => $referredBy,
             ]);
+
+            session()->forget('referral_code');
         }
 
         Auth::login($user, true);

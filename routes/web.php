@@ -171,6 +171,12 @@ Route::get('/wishlist/shared/{token}', [WishlistController::class, 'shared'])->n
 // FAQ public page
 Route::get('/faq', [\App\Http\Controllers\FaqController::class, 'index'])->name('faq');
 
+// Referral link — simpan kode ke session lalu arahkan ke register
+Route::get('/ref/{code}', function ($code) {
+    session(['referral_code' => strtoupper($code)]);
+    return redirect()->route('register');
+})->name('referral.link');
+
 // Newsletter Subscription
 Route::post('/newsletter/subscribe', [HomeController::class, 'subscribe'])->name('newsletter.subscribe');
 

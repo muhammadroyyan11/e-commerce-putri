@@ -37,6 +37,18 @@
                     <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px;">{{ __('messages.auth.confirm_password') }}</label>
                     <input type="password" name="password_confirmation" required style="width: 100%; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 14px; font-size: 15px;">
                 </div>
+
+                @if(session('referral_code'))
+                <div style="margin-bottom: 20px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-gift" style="color: var(--primary-color);"></i>
+                    <div>
+                        <div style="font-size: 13px; color: #166534; font-weight: 600;">Kamu diundang dengan kode referral</div>
+                        <div style="font-size: 15px; font-weight: 700; letter-spacing: 2px; color: var(--primary-color);">{{ session('referral_code') }}</div>
+                    </div>
+                    <input type="hidden" name="referral_code" value="{{ session('referral_code') }}">
+                </div>
+                @endif
+
                 <button type="submit" style="width: 100%; padding: 16px; background: var(--gradient-primary); color: white; border: none; border-radius: 14px; font-weight: 600; font-size: 16px; cursor: pointer;">{{ __('messages.button.register') }}</button>
             </form>
 
